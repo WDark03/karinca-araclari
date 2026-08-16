@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171717">
+<title>Karınca Çiftliğim — Koloni Takip</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f4f4;color:#202020;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:#171717;color:#fff;padding:24px 18px}.header-inner{max-width:900px;margin:auto}.back{color:#ccc;text-decoration:none;font-size:13px}
+h1{margin:12px 0 5px;font-size:27px}.sub{margin:0;color:#cfcfcf;font-size:14px}
+main{max-width:900px;margin:auto;padding:18px 16px 40px}button{border:0;border-radius:12px;padding:12px 15px;font-size:15px;font-weight:700;cursor:pointer}
+.primary{background:#202020;color:#fff;width:100%;margin-bottom:12px}.secondary{background:#eee;color:#222}.danger{background:#f0dddd;color:#8b2222}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:17px;padding:17px}.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.colony{cursor:pointer}.colony:active{transform:scale(.99)}.title{font-size:19px;font-weight:800}.meta{font-size:13px;color:#777;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}.stat{background:#f5f5f5;border-radius:11px;padding:9px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:#777}
+.empty{text-align:center;color:#777;padding:45px 10px}.hidden{display:none!important}.detail-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.detail-title{font-size:25px;font-weight:800}.detail-sub{font-size:13px;color:#777;margin-top:4px}
+.bigstats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}.bigstat{background:#f5f5f5;border-radius:13px;padding:14px}.bigstat b{font-size:23px;display:block}.bigstat span{font-size:12px;color:#777}
+.actions{display:flex;gap:8px;margin-top:10px}.actions button{flex:1}.form{display:grid;gap:11px}label{font-size:13px;font-weight:700;color:#555}
+input,textarea{width:100%;border:1px solid #d7d7d7;border-radius:12px;padding:12px;font-size:16px;background:#fff;font-family:inherit}textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.notice{background:#fff7df;border:1px solid #ead99d;border-radius:13px;padding:12px;font-size:12px;color:#705d22;margin-bottom:14px}
+.timeline{margin-top:12px}.record{padding:14px 0;border-bottom:1px solid #eee}.record:last-child{border-bottom:0}.record-date{font-weight:800}
+.record-stats{font-size:12px;color:#777;margin-top:4px;line-height:1.5}.record-note{font-size:13px;color:#555;margin-top:6px;line-height:1.45}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.photo-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer}
+.file{padding:10px;background:#f5f5f5;border-radius:12px;font-size:13px}.preview{display:flex;gap:7px;overflow:auto;margin-top:8px}.preview img{width:75px;height:75px;object-fit:cover;border-radius:9px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;padding:15px;align-items:center}.modal.open{display:flex}.sheet{background:#fff;width:100%;max-width:650px;margin:auto;border-radius:20px;padding:20px;max-height:92vh;overflow:auto}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px;padding:0}.chart{height:230px;width:100%;display:block;background:#fafafa;border-radius:14px}
+footer{text-align:center;color:#999;font-size:12px;padding:25px}
+@media(min-width:650px){.grid{grid-template-columns:1fr 1fr}.bigstats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+<a class="back" href="index.html">← Karınca Araçları</a>
+<h1>📊 Koloni Takip</h1><p class="sub">Kolonilerini oluştur, güncelle ve gelişimini fotoğraflarla takip et.</p>
+</div></header>
 
+<main>
+<section id="listView">
+<button class="primary" id="newColonyBtn">＋ Yeni Koloni Oluştur</button>
+<div class="notice">Kayıtlar ve fotoğraflar bu cihazdaki tarayıcıda saklanır. Başka cihazlarda otomatik görünmez.</div>
+<div id="colonyList" class="grid"></div>
+</section>
+
+<section id="detailView" class="hidden">
+<div class="card">
+<div class="detail-head"><div><div id="detailTitle" class="detail-title"></div><div id="detailSub" class="detail-sub"></div></div><button class="secondary" id="backBtn">← Geri</button></div>
+<div id="currentStats" class="bigstats"></div>
+<button class="primary" id="updateBtn">＋ Güncelleme Ekle</button>
+<div class="actions"><button class="secondary" id="renameBtn">Koloni Adını Değiştir</button><button class="danger" id="deleteBtn">Koloniyi Sil</button></div>
+</div>
+
+<div class="card" style="margin-top:12px"><h3 style="margin-top:0">📈 İşçi Gelişimi</h3><canvas id="chart" class="chart"></canvas></div>
+
+<div class="card" style="margin-top:12px"><h3 style="margin-top:0">📅 Koloni Geçmişi</h3><div id="history" class="timeline"></div></div>
+</section>
+</main>
+<footer>Karınca Çiftliğim • Koloni Takip</footer>
+
+<div class="modal" id="modal"><div class="sheet">
+<button class="close" id="closeModal">×</button><h2 id="modalTitle">Yeni Koloni</h2>
+<form id="form" class="form">
+<div id="nameField"><label>Koloni adı</label><input id="name" placeholder="Örn. Messor #1" required></div>
+<div id="speciesField"><label>Cins / tür</label><input id="species" placeholder="Örn. Messor structor"></div>
+<div id="foundingField"><label>Kraliçenin koloni kuruluş tarihi</label><input id="founding" type="date"></div>
+<div class="row"><div><label>İşçi sayısı</label><input id="workers" type="number" min="0" value="0" required></div><div><label>Yumurta sayısı</label><input id="eggs" type="number" min="0" value="0"></div></div>
+<div class="row"><div><label>Larva sayısı</label><input id="larvae" type="number" min="0" value="0"></div><div><label>Pupa sayısı</label><input id="pupae" type="number" min="0" value="0"></div></div>
+<div class="row"><div><label>Sıcaklık (°C)</label><input id="temp" type="number" step="0.1" placeholder="25"></div><div><label>Nem (%)</label><input id="humidity" type="number" min="0" max="100" placeholder="70"></div></div>
+<div><label>Not</label><textarea id="note" placeholder="Beslenme, davranış, önemli değişiklikler..."></textarea></div>
+<div><label>📷 Fotoğraf ekle</label><input class="file" id="photos" type="file" accept="image/*" multiple><div id="preview" class="preview"></div></div>
+<button class="primary" type="submit">Kaydet</button>
+</form>
+</div></div>
+
+<div class="modal" id="photoModal"><div class="sheet" style="text-align:center"><button class="close" id="closePhoto">×</button><img id="largePhoto" style="max-width:100%;max-height:78vh;border-radius:12px;object-fit:contain"></div></div>
+
+<script>
+const KEY="karinca_ciftligim_koloniler_v2";let colonies=load(),currentId=null,mode="new",pendingPhotos=[];
+const $=id=>document.getElementById(id);
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(colonies))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function today(){let d=new Date(),z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+function fmt(v){if(!v)return"—";let [y,m,d]=v.split("-");return`${d}.${m}.${y}`}
+function openModal(){ $("modal").classList.add("open") }
+function closeModal(){ $("modal").classList.remove("open");pendingPhotos=[];$("preview").innerHTML="" }
+function resetForm(){ $("form").reset();$("workers").value=0;$("eggs").value=0;$("larvae").value=0;$("pupae").value=0;$("founding").value=today();pendingPhotos=[];$("preview").innerHTML=""}
+function showList(){currentId=null;$("detailView").classList.add("hidden");$("listView").classList.remove("hidden");renderList()}
+function renderList(){
+ let box=$("colonyList");
+ if(!colonies.length){box.innerHTML='<div class="empty card">Henüz koloni oluşturmadın.<br>İlk kolonini oluşturmak için yukarıdaki butona bas.</div>';return}
+ box.innerHTML=colonies.map(c=>{let last=(c.history||[]).at(-1)||{};return`<article class="card colony" onclick="openDetail('${c.id}')"><div class="title">🐜 ${esc(c.name)}</div><div class="meta">${esc(c.species||"Tür belirtilmedi")} • ${c.founding?fmt(c.founding):"Kuruluş tarihi yok"}</div><div class="stats"><div class="stat"><b>${last.workers??0}</b><span>İşçi</span></div><div class="stat"><b>${last.larvae??0}</b><span>Larva</span></div><div class="stat"><b>${last.pupae??0}</b><span>Pupa</span></div></div></article>`}).join("")
+}
+function openDetail(id){currentId=id;$("listView").classList.add("hidden");$("detailView").classList.remove("hidden");renderDetail()}
+function renderDetail(){
+ let c=colonies.find(x=>x.id===currentId);if(!c)return showList();let h=c.history||[],last=h.at(-1)||{};
+ $("detailTitle").textContent="🐜 "+c.name;$("detailSub").textContent=(c.species||"Tür belirtilmedi")+" • Kuruluş: "+(c.founding?fmt(c.founding):"Belirtilmedi");
+ $("currentStats").innerHTML=[["👷",last.workers??0,"İşçi"],["🥚",last.eggs??0,"Yumurta"],["🐛",last.larvae??0,"Larva"],["🟤",last.pupae??0,"Pupa"],["🌡️",last.temp?last.temp+"°C":"—","Sıcaklık"],["💧",last.humidity!==""&&last.humidity!=null?last.humidity+"%":"—","Nem"]].map(x=>`<div class="bigstat"><span>${x[0]} ${x[2]}</span><b>${x[1]}</b></div>`).join("");
+ $("history").innerHTML=h.length?h.slice().reverse().map(r=>`<div class="record"><div class="record-date">${fmt(r.date)}</div><div class="record-stats">👷 ${r.workers} • 🥚 ${r.eggs} • 🐛 ${r.larvae} • 🟤 ${r.pupae}${r.temp!==""&&r.temp!=null?" • 🌡️ "+r.temp+"°C":""}${r.humidity!==""&&r.humidity!=null?" • 💧 "+r.humidity+"%":""}</div>${r.note?`<div class="record-note">${esc(r.note)}</div>`:""}${r.photos?.length?`<div class="photo-grid">${r.photos.map(p=>`<img src="${p}" onclick="event.stopPropagation();showPhoto('${p}')">`).join("")}</div>`:""}</div>`).join(""):"<div class='empty'>Henüz kayıt yok.</div>";
+ drawChart(h)
+}
+function drawChart(h){
+ let cv=$("chart"),dpr=devicePixelRatio||1,w=cv.clientWidth,hgt=230;cv.width=w*dpr;cv.height=hgt*dpr;let x=cv.getContext("2d");x.scale(dpr,dpr);x.clearRect(0,0,w,hgt);
+ if(h.length<2){x.fillStyle="#888";x.font="13px system-ui";x.fillText("Grafik için en az 2 güncelleme kaydı gerekir.",15,35);return}
+ let pad=30,max=Math.max(...h.map(r=>r.workers),1),min=0; x.strokeStyle="#ddd";x.lineWidth=1;
+ for(let i=0;i<4;i++){let yy=pad+(hgt-pad*2)*i/3;x.beginPath();x.moveTo(pad,yy);x.lineTo(w-pad,yy);x.stroke()}
+ x.strokeStyle="#222";x.lineWidth=2;x.beginPath();
+ h.forEach((r,i)=>{let xx=pad+(w-pad*2)*(i/(h.length-1)),yy=hgt-pad-(r.workers-min)/(max-min||1)*(hgt-pad*2);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.stroke();
+ x.fillStyle="#222";h.forEach((r,i)=>{let xx=pad+(w-pad*2)*(i/(h.length-1)),yy=hgt-pad-r.workers/(max||1)*(hgt-pad*2);x.beginPath();x.arc(xx,yy,4,0,Math.PI*2);x.fill()})
+}
+async function filesToData(files){
+ let out=[];for(let f of files){if(!f.type.startsWith("image/"))continue;if(f.size>2*1024*1024){alert(f.name+" 2 MB'dan büyük, atlandı.");continue}
+  out.push(await new Promise(res=>{let r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)}))}
+ return out
+}
+$("photos").onchange=async e=>{pendingPhotos=await filesToData([...e.target.files]);$("preview").innerHTML=pendingPhotos.map(p=>`<img src="${p}">`).join("")}
+$("newColonyBtn").onclick=()=>{mode="new";resetForm();$("modalTitle").textContent="Yeni Koloni";openModal()}
+$("updateBtn").onclick=()=>{let c=colonies.find(x=>x.id===currentId);if(!c)return;mode="update";resetForm();$("modalTitle").textContent="Yeni Güncelleme";$("name").value=c.name;$("species").value=c.species||"";$("founding").value=c.founding||"";$("nameField").classList.add("hidden");$("speciesField").classList.add("hidden");$("foundingField").classList.add("hidden");openModal()}
+$("renameBtn").onclick=()=>{let c=colonies.find(x=>x.id===currentId);if(!c)return;let n=prompt("Yeni koloni adı:",c.name);if(n?.trim()){c.name=n.trim();save();renderDetail()}}
+$("deleteBtn").onclick=()=>{if(confirm("Bu koloni ve tüm geçmiş kayıtları silinsin mi?")){colonies=colonies.filter(c=>c.id!==currentId);save();showList()}}
+$("backBtn").onclick=showList;$("closeModal").onclick=()=>{closeModal();$("nameField").classList.remove("hidden");$("speciesField").classList.remove("hidden");$("foundingField").classList.remove("hidden")};
+$("modal").onclick=e=>{if(e.target===$("modal")){$("closeModal").click()}}
+$("closePhoto").onclick=()=>$("photoModal").classList.remove("open");$("photoModal").onclick=e=>{if(e.target===$("photoModal"))$("photoModal").classList.remove("open")}
+function showPhoto(src){$("largePhoto").src=src;$("photoModal").classList.add("open")}
+$("form").onsubmit=async e=>{
+ e.preventDefault();let data={date:today(),workers:Number($("workers").value)||0,eggs:Number($("eggs").value)||0,larvae:Number($("larvae").value)||0,pupae:Number($("pupae").value)||0,temp:$("temp").value,humidity:$("humidity").value,note:$("note").value.trim(),photos:pendingPhotos};
+ if(mode==="new"){let c={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),name:$("name").value.trim(),species:$("species").value.trim(),founding:$("founding").value,history:[data]};if(!c.name){alert("Koloni adı gir.");return}colonies.push(c);save();closeModal();renderList();openDetail(c.id)}
+ else{let c=colonies.find(x=>x.id===currentId);c.history=c.history||[];c.history.push(data);save();closeModal();renderDetail()}
+ $("nameField").classList.remove("hidden");$("speciesField").classList.remove("hidden");$("foundingField").classList.remove("hidden");
+};
+window.addEventListener("resize",()=>{if(currentId)drawChart((colonies.find(c=>c.id===currentId)||{}).history||[])});
+renderList();
+</script>
+</body>
+</html>
