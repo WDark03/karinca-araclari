@@ -1593,17 +1593,13 @@ async function renderColony() {
    GEÇMİŞ
 ===================================== */
 
-async function renderHistory(
-    history
-) {
+async function renderHistory(history) {
 
     const container =
-        document.getElementById(
-            "history"
-        );
+        document.getElementById("history");
 
 
-    if (!history.length) {
+    if (!history || !history.length) {
 
         container.innerHTML = `
             <div class="empty">
@@ -1612,70 +1608,96 @@ async function renderHistory(
         `;
 
         return;
-
     }
 
 
     container.innerHTML = "";
 
 
-    for (
-        const record
-        of [...history].reverse()
-    ) {
+    for (const record of [...history].reverse()) {
+
+        /*
+            FOTOĞRAFLARI GETİR
+        */
 
         const {
-            data: photos
-        } =
-        await supabaseClient
+            data: photos,
+            error: photoLoadError
+        } = await supabaseClient
             .from("colony_photos")
-            .select("*")
-            .eq(
-                "update_id",
-                record.id
+            .select("id, update_id, photo_url")
+            .eq("update_id", record.id);
+
+
+        /*
+            FOTOĞRAF OKUMA HATASI
+        */
+
+        if (photoLoadError) {
+
+            console.error(
+                "FOTOĞRAFLAR YÜKLENEMEDİ:",
+                photoLoadError
             );
 
+        }
+
+
+        /*
+            GEÇMİŞ KAYDI
+        */
 
         const item =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         item.className =
             "history-item";
 
 
+        /*
+            FOTOĞRAF HTML
+        */
+
         let photoHTML = "";
 
 
         if (
             photos &&
-            photos.length
+            photos.length > 0
         ) {
 
             photoHTML = `
                 <div class="photo-grid">
 
-                    ${
-                        photos
-                        .map(
-                            photo =>
-                            `
+                    ${photos.map(photo => {
+
+                        const photoURL =
+                            escapeHTML(
+                                photo.photo_url
+                            );
+
+                        return `
                             <img
-                                src="${photo.photo_url}"
-                                onclick="window.open('${photo.photo_url}','_blank')"
+                                src="${photoURL}"
+                                alt="Koloni fotoğrafı"
+                                loading="lazy"
+                                onclick="window.open('${photoURL}', '_blank')"
+                                onerror="console.error('Fotoğraf görüntülenemedi:', '${photoURL}')"
                             >
-                            `
-                        )
-                        .join("")
-                    }
+                        `;
+
+                    }).join("")}
 
                 </div>
             `;
 
         }
 
+
+        /*
+            GEÇMİŞ KAYDINI OLUŞTUR
+        */
 
         item.innerHTML = `
 
@@ -1721,9 +1743,11 @@ async function renderHistory(
                 record.note
                 ? `
                     <div class="history-note">
+
                         ${escapeHTML(
                             record.note
                         )}
+
                     </div>
                 `
                 : ""
@@ -1735,9 +1759,7 @@ async function renderHistory(
         `;
 
 
-        container.appendChild(
-            item
-        );
+        container.appendChild(item);
 
     }
 
@@ -2463,6 +2485,37 @@ async function createColony() {
 
 async function createUpdate(colonyId) {
 
+    console.log("=== CREATE UPDATE BAŞLADI ===");
+    console.log("Colony ID:", colonyId);
+    console.log("Current User:", currentUser?.id);
+
+
+    if (!currentUser) {
+
+        alert("Oturum bulunamadı. Lütfen tekrar giriş yap.");
+
+        return false;
+
+    }
+
+
+    if (!colonyId) {
+
+        alert("Koloni ID bulunamadı.");
+
+        console.error(
+            "CREATE UPDATE: colonyId undefined/null"
+        );
+
+        return false;
+
+    }
+
+
+    /*
+        GÜNCELLEMEYİ OLUŞTUR
+    */
+
     const {
         data,
         error
@@ -2480,74 +2533,56 @@ async function createUpdate(colonyId) {
             workers:
                 Number(
                     document
-                        .getElementById(
-                            "workers"
-                        )
+                        .getElementById("workers")
                         .value
                 ) || 0,
 
             eggs:
                 Number(
                     document
-                        .getElementById(
-                            "eggs"
-                        )
+                        .getElementById("eggs")
                         .value
                 ) || 0,
 
             larvae:
                 Number(
                     document
-                        .getElementById(
-                            "larvae"
-                        )
+                        .getElementById("larvae")
                         .value
                 ) || 0,
 
             pupae:
                 Number(
                     document
-                        .getElementById(
-                            "pupae"
-                        )
+                        .getElementById("pupae")
                         .value
                 ) || 0,
 
             temperature:
                 document
-                    .getElementById(
-                        "temperature"
-                    )
+                    .getElementById("temperature")
                     .value === ""
                     ? null
                     : Number(
                         document
-                            .getElementById(
-                                "temperature"
-                            )
+                            .getElementById("temperature")
                             .value
                     ),
 
             humidity:
                 document
-                    .getElementById(
-                        "humidity"
-                    )
+                    .getElementById("humidity")
                     .value === ""
                     ? null
                     : Number(
                         document
-                            .getElementById(
-                                "humidity"
-                            )
+                            .getElementById("humidity")
                             .value
                     ),
 
             note:
                 document
-                    .getElementById(
-                        "note"
-                    )
+                    .getElementById("note")
                     .value
                     .trim()
                     || null
@@ -2557,15 +2592,39 @@ async function createUpdate(colonyId) {
         .single();
 
 
+    console.log(
+        "UPDATE INSERT SONUCU:",
+        data
+    );
+
+    console.log(
+        "UPDATE INSERT HATASI:",
+        error
+    );
+
+
     if (error) {
 
+        console.error(
+            "GÜNCELLEME OLUŞTURULAMADI:",
+            error
+        );
+
         alert(
+            "Güncelleme oluşturulamadı:\n\n"
+            +
             error.message
         );
 
         return false;
 
     }
+
+
+    console.log(
+        "GÜNCELLEME BAŞARIYLA OLUŞTURULDU:",
+        data.id
+    );
 
 
     /*
@@ -2576,6 +2635,16 @@ async function createUpdate(colonyId) {
         const file
         of selectedPhotos
     ) {
+
+        console.log(
+            "Fotoğraf yükleniyor:",
+            file.name
+        );
+
+
+        /*
+            BOYUT KONTROLÜ
+        */
 
         if (
             file.size >
@@ -2593,11 +2662,20 @@ async function createUpdate(colonyId) {
         }
 
 
+        /*
+            DOSYA UZANTISI
+        */
+
         const extension =
             file.name
                 .split(".")
-                .pop();
+                .pop()
+                .toLowerCase();
 
+
+        /*
+            STORAGE PATH
+        */
 
         const path =
             currentUser.id
@@ -2619,27 +2697,46 @@ async function createUpdate(colonyId) {
             extension;
 
 
+        console.log(
+            "Storage path:",
+            path
+        );
+
+
+        /*
+            STORAGE'A YÜKLE
+        */
+
         const upload =
             await supabaseClient
                 .storage
-                .from(
-                    "colony-photos"
-                )
+                .from("colony-photos")
                 .upload(
                     path,
                     file,
                     {
-                        upsert: false
+                        upsert: false,
+                        contentType:
+                            file.type
                     }
                 );
 
 
-        if (
-            upload.error
-        ) {
+        console.log(
+            "STORAGE SONUCU:",
+            upload
+        );
+
+
+        if (upload.error) {
+
+            console.error(
+                "STORAGE HATASI:",
+                upload.error
+            );
 
             alert(
-                "Fotoğraf yüklenemedi: "
+                "Fotoğraf yüklenemedi:\n\n"
                 +
                 upload.error.message
             );
@@ -2649,27 +2746,39 @@ async function createUpdate(colonyId) {
         }
 
 
-        const publicURL =
-            supabaseClient
-                .storage
-                .from(
-                    "colony-photos"
-                )
-                .getPublicUrl(
-                    path
-                )
-                .data
-                .publicUrl;
-
+        /*
+            PUBLIC URL
+        */
 
         const {
-            error:
-            photoError
+            data: publicData
+        } =
+        supabaseClient
+            .storage
+            .from("colony-photos")
+            .getPublicUrl(path);
+
+
+        const publicURL =
+            publicData.publicUrl;
+
+
+        console.log(
+            "Public URL:",
+            publicURL
+        );
+
+
+        /*
+            FOTOĞRAF TABLOSU
+        */
+
+        const {
+            data: photoRecord,
+            error: photoError
         } =
         await supabaseClient
-            .from(
-                "colony_photos"
-            )
+            .from("colony_photos")
             .insert({
 
                 update_id:
@@ -2678,30 +2787,77 @@ async function createUpdate(colonyId) {
                 photo_url:
                     publicURL
 
-            });
+            })
+            .select()
+            .single();
+
+
+        console.log(
+            "PHOTO INSERT SONUCU:",
+            photoRecord
+        );
+
+        console.log(
+            "PHOTO INSERT HATASI:",
+            photoError
+        );
 
 
         if (photoError) {
 
+            console.error(
+                "FOTOĞRAF VERİTABANI KAYIT HATASI:",
+                photoError
+            );
+
             alert(
+                "Fotoğraf veritabanına kaydedilemedi:\n\n"
+                +
                 photoError.message
             );
 
+            continue;
+
         }
+
+
+        console.log(
+            "FOTOĞRAF BAŞARIYLA KAYDEDİLDİ:",
+            photoRecord.id
+        );
 
     }
 
 
+    /*
+        FOTOĞRAFLARI TEMİZLE
+    */
+
     selectedPhotos = [];
+
+
+    /*
+        MODALI KAPAT
+    */
 
     closeModal();
 
+
+    /*
+        GÜNCEL KOLONİYİ TEKRAR ÇİZ
+    */
+
     await renderColony();
+
+
+    console.log(
+        "=== CREATE UPDATE TAMAMLANDI ==="
+    );
+
 
     return true;
 
 }
-
 /* =====================================
    GERİ
 ===================================== */
