@@ -2461,186 +2461,130 @@ async function createColony() {
    GÜNCELLEME OLUŞTUR
 ===================================== */
 
-async function createUpdate(
-    colonyId
-) {
-console.log("CURRENT USER:", currentUser);
-console.log("CURRENT USER ID:", currentUser?.id);
-console.log("COLONY ID:", colonyId);
+async function createUpdate(colonyId) {
 
-const {
-    data: sessionData,
-    error: sessionError
-} = await supabaseClient.auth.getSession();
+    console.log("=== CREATE UPDATE BAŞLADI ===");
+    console.log("Colony ID:", colonyId);
+    console.log("Current User:", currentUser?.id);
 
-console.log("SESSION:", sessionData);
-console.log("SESSION ERROR:", sessionError);
-console.log(
-    "SESSION USER ID:",
-    sessionData?.session?.user?.id
-);
     const {
         data,
         error
-    } =
-    await supabaseClient
+    } = await supabaseClient
         .from("colony_updates")
         .insert({
+            colony_id: colonyId,
 
-            colony_id:
-                colonyId,
-
-            update_date:
-                today(),
+            update_date: today(),
 
             workers:
                 Number(
-                    document
-                        .getElementById(
-                            "workers"
-                        )
-                        .value
+                    document.getElementById("workers").value
                 ) || 0,
 
             eggs:
                 Number(
-                    document
-                        .getElementById(
-                            "eggs"
-                        )
-                        .value
+                    document.getElementById("eggs").value
                 ) || 0,
 
             larvae:
                 Number(
-                    document
-                        .getElementById(
-                            "larvae"
-                        )
-                        .value
+                    document.getElementById("larvae").value
                 ) || 0,
 
             pupae:
                 Number(
-                    document
-                        .getElementById(
-                            "pupae"
-                        )
-                        .value
+                    document.getElementById("pupae").value
                 ) || 0,
 
             temperature:
-                document
-                    .getElementById(
-                        "temperature"
-                    )
-                    .value === ""
+                document.getElementById("temperature").value === ""
                     ? null
                     : Number(
-                        document
-                            .getElementById(
-                                "temperature"
-                            )
-                            .value
+                        document.getElementById("temperature").value
                     ),
 
             humidity:
-                document
-                    .getElementById(
-                        "humidity"
-                    )
-                    .value === ""
+                document.getElementById("humidity").value === ""
                     ? null
                     : Number(
-                        document
-                            .getElementById(
-                                "humidity"
-                            )
-                            .value
+                        document.getElementById("humidity").value
                     ),
 
             note:
-                document
-                    .getElementById(
-                        "note"
-                    )
-                    .value
-                    .trim()
-                    || null
-
+                document.getElementById("note").value.trim()
+                || null
         })
         .select()
         .single();
 
+    console.log("UPDATE INSERT SONUCU:", data);
+    console.log("UPDATE INSERT HATASI:", error);
 
     if (error) {
 
         alert(
-            error.message
+            "Güncelleme oluşturulamadı:\n\n"
+            + error.message
         );
 
         return false;
-
     }
+
+    console.log(
+        "GÜNCELLEME BAŞARIYLA OLUŞTURULDU:",
+        data.id
+    );
 
 
     /*
         FOTOĞRAFLAR
     */
 
-    for (
-        const file
-        of selectedPhotos
-    ) {
+    for (const file of selectedPhotos) {
 
-        if (
-            file.size >
-            5 * 1024 * 1024
-        ) {
+        console.log(
+            "Fotoğraf yükleniyor:",
+            file.name
+        );
+
+        if (file.size > 5 * 1024 * 1024) {
 
             alert(
                 file.name
-                +
-                " 5 MB'dan büyük."
+                + " 5 MB'dan büyük."
             );
 
             continue;
-
         }
-
 
         const extension =
             file.name
                 .split(".")
                 .pop();
 
-
         const path =
             currentUser.id
-            +
-            "/"
-            +
-            colonyId
-            +
-            "/"
-            +
-            data.id
-            +
-            "-"
-            +
-            crypto.randomUUID()
-            +
-            "."
-            +
-            extension;
+            + "/"
+            + colonyId
+            + "/"
+            + data.id
+            + "-"
+            + crypto.randomUUID()
+            + "."
+            + extension;
+
+
+        console.log(
+            "Storage path:",
+            path
+        );
 
 
         const upload =
             await supabaseClient
                 .storage
-                .from(
-                    "colony-photos"
-                )
+                .from("colony-photos")
                 .upload(
                     path,
                     file,
@@ -2650,42 +2594,43 @@ console.log(
                 );
 
 
-        if (
-            upload.error
-        ) {
+        console.log(
+            "STORAGE SONUCU:",
+            upload
+        );
+
+
+        if (upload.error) {
 
             alert(
-                "Fotoğraf yüklenemedi: "
-                +
-                upload.error.message
+                "Fotoğraf yüklenemedi:\n\n"
+                + upload.error.message
             );
 
             continue;
-
         }
 
 
         const publicURL =
             supabaseClient
                 .storage
-                .from(
-                    "colony-photos"
-                )
-                .getPublicUrl(
-                    path
-                )
+                .from("colony-photos")
+                .getPublicUrl(path)
                 .data
                 .publicUrl;
 
 
+        console.log(
+            "Public URL:",
+            publicURL
+        );
+
+
         const {
-            error:
-            photoError
+            error: photoError
         } =
         await supabaseClient
-            .from(
-                "colony_photos"
-            )
+            .from("colony_photos")
             .insert({
 
                 update_id:
@@ -2693,14 +2638,20 @@ console.log(
 
                 photo_url:
                     publicURL
-
             });
+
+
+        console.log(
+            "PHOTO INSERT HATASI:",
+            photoError
+        );
 
 
         if (photoError) {
 
             alert(
-                photoError.message
+                "Fotoğraf kaydı oluşturulamadı:\n\n"
+                + photoError.message
             );
 
         }
@@ -2710,9 +2661,11 @@ console.log(
 
     selectedPhotos = [];
 
+    console.log("=== CREATE UPDATE TAMAMLANDI ===");
+
+    alert("Güncelleme başarıyla kaydedildi.");
 
     return true;
-
 }
 
 
