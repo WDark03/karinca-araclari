@@ -2462,7 +2462,21 @@ async function createColony() {
 async function createUpdate(
     colonyId
 ) {
+console.log("CURRENT USER:", currentUser);
+console.log("CURRENT USER ID:", currentUser?.id);
+console.log("COLONY ID:", colonyId);
 
+const {
+    data: sessionData,
+    error: sessionError
+} = await supabaseClient.auth.getSession();
+
+console.log("SESSION:", sessionData);
+console.log("SESSION ERROR:", sessionError);
+console.log(
+    "SESSION USER ID:",
+    sessionData?.session?.user?.id
+);
     const {
         data,
         error
