@@ -3309,15 +3309,15 @@ async function showSharedColony(token) {
 
 })();
 /* =========================================================
-   KAYIT DÜZENLEME SİSTEMİ
+   KAYIT DÜZENLEME SİSTEMİ - DÜZELTİLMİŞ
 ========================================================= */
 
 let editingUpdateId = null;
 
 
-/* ---------------------------------------------------------
-   DÜZENLE BUTONU STİLİ
---------------------------------------------------------- */
+/* =========================================================
+   CSS
+========================================================= */
 
 const editStyle = document.createElement("style");
 
@@ -3349,36 +3349,34 @@ editStyle.textContent = `
 document.head.appendChild(editStyle);
 
 
-/* ---------------------------------------------------------
-   MEVCUT renderHistory FONKSİYONUNU SARMALA
---------------------------------------------------------- */
+/* =========================================================
+   MEVCUT GEÇMİŞ RENDERINI SAKLA
+========================================================= */
 
-const originalRenderHistory = renderHistory;
+const originalRenderHistoryEdit =
+    renderHistory;
+
+
+/* =========================================================
+   YENİ RENDER HISTORY
+========================================================= */
 
 renderHistory = async function(history) {
 
-    await originalRenderHistory(history);
+    await originalRenderHistoryEdit(history);
 
     const container =
         document.getElementById("history");
 
     if (!container) return;
 
-
-    /*
-        Her geçmiş kaydının altına
-        düzenle butonu ekle
-    */
-
     const items =
         container.querySelectorAll(
             ".history-item"
         );
 
-
     const reversedHistory =
         [...history].reverse();
-
 
     items.forEach(
         (item, index) => {
@@ -3388,13 +3386,11 @@ renderHistory = async function(history) {
 
             if (!record) return;
 
-
             const row =
                 document.createElement("div");
 
             row.className =
                 "history-edit-row";
-
 
             const button =
                 document.createElement("button");
@@ -3407,7 +3403,6 @@ renderHistory = async function(history) {
 
             button.textContent =
                 "✏️ Düzenle";
-
 
             button.addEventListener(
                 "click",
@@ -3422,7 +3417,6 @@ renderHistory = async function(history) {
                 }
             );
 
-
             row.appendChild(button);
 
             item.appendChild(row);
@@ -3433,9 +3427,9 @@ renderHistory = async function(history) {
 };
 
 
-/* ---------------------------------------------------------
-   KAYDI DÜZENLEME MODALINI AÇ
---------------------------------------------------------- */
+/* =========================================================
+   DÜZENLEME MODALINI AÇ
+========================================================= */
 
 async function openEditUpdate(updateId) {
 
@@ -3450,10 +3444,15 @@ async function openEditUpdate(updateId) {
             "id",
             updateId
         )
-        .single();
+        .limit(1);
 
 
     if (error) {
+
+        console.error(
+            "KAYIT ALMA HATASI:",
+            error
+        );
 
         alert(
             "Kayıt alınamadı:\n\n"
@@ -3466,10 +3465,18 @@ async function openEditUpdate(updateId) {
     }
 
 
-    if (!data) {
+    /*
+        .single() KULLANMIYORUZ.
+        Böylece "Cannot coerce..." hatası olmaz.
+    */
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         alert(
-            "Kayıt bulunamadı."
+            "Düzenlenecek kayıt bulunamadı."
         );
 
         return;
@@ -3477,8 +3484,12 @@ async function openEditUpdate(updateId) {
     }
 
 
+    const record =
+        data[0];
+
+
     editingUpdateId =
-        data.id;
+        record.id;
 
 
     /* MODAL BAŞLIĞI */
@@ -3500,14 +3511,12 @@ async function openEditUpdate(updateId) {
         .classList
         .add("hidden");
 
-
     document
         .getElementById(
             "speciesGroup"
         )
         .classList
         .add("hidden");
-
 
     document
         .getElementById(
@@ -3517,79 +3526,55 @@ async function openEditUpdate(updateId) {
         .add("hidden");
 
 
-    /* MEVCUT DEĞERLERİ FORMA DOLDUR */
+    /* DEĞERLERİ FORMA DOLDUR */
 
     document
         .getElementById("workers")
         .value =
-        data.workers ?? 0;
-
+        record.workers ?? 0;
 
     document
         .getElementById("eggs")
         .value =
-        data.eggs ?? 0;
-
+        record.eggs ?? 0;
 
     document
         .getElementById("larvae")
         .value =
-        data.larvae ?? 0;
-
+        record.larvae ?? 0;
 
     document
         .getElementById("pupae")
         .value =
-        data.pupae ?? 0;
-
+        record.pupae ?? 0;
 
     document
         .getElementById("temperature")
         .value =
-        data.temperature ?? "";
-
+        record.temperature ?? "";
 
     document
         .getElementById("humidity")
         .value =
-        data.humidity ?? "";
-
+        record.humidity ?? "";
 
     document
         .getElementById("note")
         .value =
-        data.note ?? "";
+        record.note ?? "";
 
 
     /* FOTOĞRAF SEÇİMİNİ TEMİZLE */
 
     selectedPhotos = [];
 
-
     document
         .getElementById("photos")
         .value = "";
 
-
     document
         .getElementById("preview")
         .innerHTML = "";
-
-
-    /* KAYDET BUTONU */
-
-    const saveButton =
-        document.querySelector(
-            "#colonyForm button[type='submit']"
-        );
-
-
-    if (saveButton) {
-
-        saveButton.textContent =
-            "Değişiklikleri Kaydet";
-
-    }
 
 
     /* BİLGİ MESAJI */
@@ -3633,7 +3618,9 @@ async function openEditUpdate(updateId) {
             .getElementById(
                 "colonyForm"
             )
-            .prepend(notice);
+            .prepend(
+                notice
+            );
 
     }
 
@@ -3642,14 +3629,30 @@ async function openEditUpdate(updateId) {
         "✏️ Eski kaydı düzenliyorsun. Değişikliklerini yaptıktan sonra kaydet.";
 
 
+    /* BUTON */
+
+    const saveButton =
+        document.querySelector(
+            "#colonyForm button[type='submit']"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Değişiklikleri Kaydet";
+
+    }
+
+
     openModal();
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    DÜZENLEME MODUNU TEMİZLE
---------------------------------------------------------- */
+========================================================= */
 
 function clearEditMode() {
 
@@ -3686,9 +3689,9 @@ function clearEditMode() {
 }
 
 
-/* ---------------------------------------------------------
-   FORM GÖNDERİMİNİ YAKALA
---------------------------------------------------------- */
+/* =========================================================
+   FORM SUBMIT
+========================================================= */
 
 document
     .getElementById(
@@ -3698,21 +3701,12 @@ document
         "submit",
         async function(event) {
 
-            /*
-                Normal kayıt ise mevcut sistem çalışsın.
-            */
-
             if (!editingUpdateId) {
 
                 return;
 
             }
 
-
-            /*
-                Düzenleme modundaysa
-                mevcut createUpdate çalışmasın.
-            */
 
             event.preventDefault();
 
@@ -3728,9 +3722,9 @@ document
     );
 
 
-/* ---------------------------------------------------------
-   VERİTABANINDAKİ KAYDI GÜNCELLE
---------------------------------------------------------- */
+/* =========================================================
+   MEVCUT KAYDI GÜNCELLE
+========================================================= */
 
 async function updateExistingRecord(
     updateId
@@ -3739,7 +3733,7 @@ async function updateExistingRecord(
     if (!currentUser) {
 
         alert(
-            "Oturum bulunamadı. Tekrar giriş yap."
+            "Oturum bulunamadı."
         );
 
         return;
@@ -3758,7 +3752,6 @@ async function updateExistingRecord(
                     .value
             ) || 0,
 
-
         eggs:
             Number(
                 document
@@ -3767,7 +3760,6 @@ async function updateExistingRecord(
                     )
                     .value
             ) || 0,
-
 
         larvae:
             Number(
@@ -3778,7 +3770,6 @@ async function updateExistingRecord(
                     .value
             ) || 0,
 
-
         pupae:
             Number(
                 document
@@ -3787,7 +3778,6 @@ async function updateExistingRecord(
                     )
                     .value
             ) || 0,
-
 
         temperature:
             document
@@ -3804,7 +3794,6 @@ async function updateExistingRecord(
                         .value
                 ),
 
-
         humidity:
             document
                 .getElementById(
@@ -3820,7 +3809,6 @@ async function updateExistingRecord(
                         .value
                 ),
 
-
         note:
             document
                 .getElementById(
@@ -3834,13 +3822,26 @@ async function updateExistingRecord(
 
 
     console.log(
-        "KAYIT DÜZENLENİYOR:",
+        "=== KAYIT DÜZENLEME ==="
+    );
+
+    console.log(
+        "Update ID:",
         updateId
     );
 
+    console.log(
+        "Yeni veriler:",
+        updateData
+    );
+
+
+    /*
+        DİKKAT:
+        .select().single() YOK.
+    */
 
     const {
-        data,
         error
     } =
     await supabaseClient
@@ -3851,15 +3852,13 @@ async function updateExistingRecord(
         .eq(
             "id",
             updateId
-        )
-        .select()
-        .single();
+        );
 
 
     if (error) {
 
         console.error(
-            "DÜZENLEME HATASI:",
+            "GÜNCELLEME HATASI:",
             error
         );
 
@@ -3875,17 +3874,12 @@ async function updateExistingRecord(
 
 
     console.log(
-        "KAYIT GÜNCELLENDİ:",
-        data
+        "KAYIT BAŞARIYLA GÜNCELLENDİ"
     );
 
 
-    /* MODU TEMİZLE */
-
     clearEditMode();
 
-
-    /* MODALI KAPAT */
 
     document
         .getElementById(
@@ -3894,8 +3888,6 @@ async function updateExistingRecord(
         .classList
         .remove("open");
 
-
-    /* FORMU TEMİZLE */
 
     selectedPhotos = [];
 
@@ -3914,8 +3906,6 @@ async function updateExistingRecord(
         .value = "";
 
 
-    /* KOLONİYİ YENİDEN ÇİZ */
-
     await renderColony();
 
 
@@ -3926,11 +3916,11 @@ async function updateExistingRecord(
 }
 
 
-/* ---------------------------------------------------------
-   MODAL KAPATILIRSA DÜZENLEMEYİ İPTAL ET
---------------------------------------------------------- */
+/* =========================================================
+   MODAL KAPATILINCA DÜZENLEMEYİ TEMİZLE
+========================================================= */
 
-const originalCloseModalForEdit =
+const originalCloseModalEdit2 =
     closeModal;
 
 
@@ -3938,17 +3928,16 @@ closeModal = function() {
 
     clearEditMode();
 
-    originalCloseModalForEdit();
+    originalCloseModalEdit2();
 
 };
 
 
-/* ---------------------------------------------------------
-   YENİ KOLONİ / YENİ GÜNCELLEME AÇILIRKEN
-   DÜZENLEME MODUNU TEMİZLE
---------------------------------------------------------- */
+/* =========================================================
+   YENİ FORM AÇILIRKEN DÜZENLEME MODUNU TEMİZLE
+========================================================= */
 
-const originalResetFormForEdit =
+const originalResetFormEdit2 =
     resetForm;
 
 
@@ -3956,13 +3945,13 @@ resetForm = function() {
 
     clearEditMode();
 
-    originalResetFormForEdit();
+    originalResetFormEdit2();
 
 };
 
 
 console.log(
-    "✓ Kayıt düzenleme sistemi aktif."
+    "✓ Düzenleme sistemi aktif."
 );
 </script>
 
