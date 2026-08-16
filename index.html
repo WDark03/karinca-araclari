@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Karınca Çiftliği Araçları</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+            color: #222;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 25px 18px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        .logo {
+            font-size: 48px;
+        }
+
+        h1 {
+            margin: 10px 0 5px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .tool {
+            background: white;
+            border-radius: 18px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tool:hover {
+            transform: translateY(-3px);
+        }
+
+        .tool-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .tool-title {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tool-description {
+            margin-top: 7px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 400px) {
+
+            .tools {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">🐜</div>
+
+        <h1>Karınca Çiftliği</h1>
+
+        <div class="subtitle">
+            Karınca hobisi için kullanışlı araçlar
+        </div>
+
+    </div>
+
+
+    <div class="tools">
+
+        <div class="tool" onclick="openTool('calculator')">
+
+            <div class="tool-icon">🏠</div>
+
+            <div class="tool-title">
+                Formicarium Hesaplayıcı
+            </div>
+
+            <div class="tool-description">
+                Kolonin için uygun yuva koşullarını hesapla.
+            </div>
+
+        </div>
+
+
+        <div class="tool" onclick="openTool('diary')">
+
+            <div class="tool-icon">📔</div>
+
+            <div class="tool-title">
+                Koloni Günlüğü
+            </div>
+
+            <div class="tool-description">
+                Kolonilerinin gelişimini takip et.
+            </div>
+
+        </div>
+
+
+        <div class="tool" onclick="openTool('dictionary')">
+
+            <div class="tool-icon">📚</div>
+
+            <div class="tool-title">
+                Karınca Sözlüğü
+            </div>
+
+            <div class="tool-description">
+                Karınca hobisindeki terimleri keşfet.
+            </div>
+
+        </div>
+
+
+        <div class="tool" onclick="openTool('turkey')">
+
+            <div class="tool-icon">🇹🇷</div>
+
+            <div class="tool-title">
+                Türkiye Türleri
+            </div>
+
+            <div class="tool-description">
+                Türkiye'deki karınca kayıtlarını incele.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        Karınca Çiftliği Araçları
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function openTool(tool) {
+
+        alert("Bu bölüm yakında eklenecek.");
+
+    }
+
+</script>
+
+</body>
+</html>
