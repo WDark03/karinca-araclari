@@ -3,134 +3,3183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#171717">
-<title>Karınca Çiftliğim — Koloni Takip</title>
+<title>Karınca Çiftliğim - Koloni Takip</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f4f4;color:#202020;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-header{background:#171717;color:#fff;padding:24px 18px}.header-inner{max-width:900px;margin:auto}.back{color:#ccc;text-decoration:none;font-size:13px}
-h1{margin:12px 0 5px;font-size:27px}.sub{margin:0;color:#cfcfcf;font-size:14px}
-main{max-width:900px;margin:auto;padding:18px 16px 40px}button{border:0;border-radius:12px;padding:12px 15px;font-size:15px;font-weight:700;cursor:pointer}
-.primary{background:#202020;color:#fff;width:100%;margin-bottom:12px}.secondary{background:#eee;color:#222}.danger{background:#f0dddd;color:#8b2222}
-.card{background:#fff;border:1px solid #e5e5e5;border-radius:17px;padding:17px}.grid{display:grid;grid-template-columns:1fr;gap:12px}
-.colony{cursor:pointer}.colony:active{transform:scale(.99)}.title{font-size:19px;font-weight:800}.meta{font-size:13px;color:#777;margin-top:5px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}.stat{background:#f5f5f5;border-radius:11px;padding:9px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:#777}
-.empty{text-align:center;color:#777;padding:45px 10px}.hidden{display:none!important}.detail-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.detail-title{font-size:25px;font-weight:800}.detail-sub{font-size:13px;color:#777;margin-top:4px}
-.bigstats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}.bigstat{background:#f5f5f5;border-radius:13px;padding:14px}.bigstat b{font-size:23px;display:block}.bigstat span{font-size:12px;color:#777}
-.actions{display:flex;gap:8px;margin-top:10px}.actions button{flex:1}.form{display:grid;gap:11px}label{font-size:13px;font-weight:700;color:#555}
-input,textarea{width:100%;border:1px solid #d7d7d7;border-radius:12px;padding:12px;font-size:16px;background:#fff;font-family:inherit}textarea{min-height:90px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.notice{background:#fff7df;border:1px solid #ead99d;border-radius:13px;padding:12px;font-size:12px;color:#705d22;margin-bottom:14px}
-.timeline{margin-top:12px}.record{padding:14px 0;border-bottom:1px solid #eee}.record:last-child{border-bottom:0}.record-date{font-weight:800}
-.record-stats{font-size:12px;color:#777;margin-top:4px;line-height:1.5}.record-note{font-size:13px;color:#555;margin-top:6px;line-height:1.45}
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.photo-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer}
-.file{padding:10px;background:#f5f5f5;border-radius:12px;font-size:13px}.preview{display:flex;gap:7px;overflow:auto;margin-top:8px}.preview img{width:75px;height:75px;object-fit:cover;border-radius:9px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;padding:15px;align-items:center}.modal.open{display:flex}.sheet{background:#fff;width:100%;max-width:650px;margin:auto;border-radius:20px;padding:20px;max-height:92vh;overflow:auto}
-.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px;padding:0}.chart{height:230px;width:100%;display:block;background:#fafafa;border-radius:14px}
-footer{text-align:center;color:#999;font-size:12px;padding:25px}
-@media(min-width:650px){.grid{grid-template-columns:1fr 1fr}.bigstats{grid-template-columns:repeat(3,1fr)}}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    margin-bottom: 15px;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+.subtitle {
+    color: #777;
+    font-size: 14px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 15px;
+    margin-top: 6px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+label {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+button {
+    border: none;
+    border-radius: 13px;
+    padding: 13px 17px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    width: 100%;
+    background: #222;
+    color: white;
+}
+
+.secondary {
+    background: #eee;
+    color: #222;
+}
+
+.danger {
+    background: #f4dddd;
+    color: #8b2222;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #777;
+}
+
+.auth-switch button {
+    background: none;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.colony {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.colony:hover {
+    transform: translateY(-2px);
+}
+
+.colony-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.colony-species {
+    color: #777;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    margin-top: 15px;
+}
+
+.stat {
+    background: #f4f4f4;
+    border-radius: 11px;
+    padding: 10px 4px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #777;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.detail-title {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.detail-species {
+    color: #777;
+    margin-top: 5px;
+}
+
+.big-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+    margin: 18px 0;
+}
+
+.big-stat {
+    background: #f4f4f4;
+    border-radius: 14px;
+    padding: 15px;
+}
+
+.big-stat-number {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.big-stat-label {
+    color: #777;
+    font-size: 12px;
+}
+
+.action-button {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.history-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-date {
+    font-weight: bold;
+}
+
+.history-stats {
+    color: #777;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.history-note {
+    margin-top: 7px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.photo-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.share-box {
+    background: #f4f4f4;
+    border-radius: 13px;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.share-box button {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.notice {
+    background: #fff8df;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    z-index: 10;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+    width: 100%;
+    max-width: 550px;
+    max-height: 92vh;
+    overflow-y: auto;
+}
+
+.close {
+    float: right;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    background: #eee;
+    font-size: 20px;
+}
+
+.preview {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    margin-top: 8px;
+}
+
+.preview img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 9px;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 35px 10px;
+}
+
+canvas {
+    width: 100%;
+    height: 230px;
+    background: #fafafa;
+    border-radius: 13px;
+}
+
+@media (max-width: 450px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 </style>
 </head>
+
 <body>
-<header><div class="header-inner">
-<a class="back" href="index.html">← Karınca Araçları</a>
-<h1>📊 Koloni Takip</h1><p class="sub">Kolonilerini oluştur, güncelle ve gelişimini fotoğraflarla takip et.</p>
-</div></header>
 
-<main>
-<section id="listView">
-<button class="primary" id="newColonyBtn">＋ Yeni Koloni Oluştur</button>
-<div class="notice">Kayıtlar ve fotoğraflar bu cihazdaki tarayıcıda saklanır. Başka cihazlarda otomatik görünmez.</div>
-<div id="colonyList" class="grid"></div>
-</section>
+<div class="container">
 
-<section id="detailView" class="hidden">
-<div class="card">
-<div class="detail-head"><div><div id="detailTitle" class="detail-title"></div><div id="detailSub" class="detail-sub"></div></div><button class="secondary" id="backBtn">← Geri</button></div>
-<div id="currentStats" class="bigstats"></div>
-<button class="primary" id="updateBtn">＋ Güncelleme Ekle</button>
-<div class="actions"><button class="secondary" id="renameBtn">Koloni Adını Değiştir</button><button class="danger" id="deleteBtn">Koloniyi Sil</button></div>
+    <!-- GİRİŞ -->
+    <div id="authView">
+
+        <div class="card">
+
+            <div class="center">
+
+                <h1>🐜 Karınca Çiftliğim</h1>
+
+                <p id="authDescription" class="subtitle">
+                    Koloni takip sistemine giriş yap.
+                </p>
+
+            </div>
+
+            <form id="authForm">
+
+                <div class="form-group">
+
+                    <label>E-posta</label>
+
+                    <input
+                        id="email"
+                        type="email"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Şifre</label>
+
+                    <input
+                        id="password"
+                        type="password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary"
+                    id="authButton"
+                >
+                    Giriş Yap
+                </button>
+
+            </form>
+
+            <div class="auth-switch">
+
+                <span id="authSwitchText">
+                    Hesabın yok mu?
+                </span>
+
+                <button id="authSwitchButton">
+                    Kayıt Ol
+                </button>
+
+            </div>
+
+            <p id="authMessage"></p>
+
+        </div>
+
+    </div>
+
+
+    <!-- KOLONİ LİSTESİ -->
+    <div id="listView" class="hidden">
+
+        <div class="topbar">
+
+            <span id="userEmail"></span>
+
+            <button
+                class="secondary"
+                id="logoutButton"
+            >
+                Çıkış
+            </button>
+
+        </div>
+
+        <button
+            class="primary"
+            id="newColonyButton"
+        >
+            ＋ Yeni Koloni
+        </button>
+
+        <div style="height:15px"></div>
+
+        <div id="colonyList"></div>
+
+    </div>
+
+
+    <!-- KOLONİ DETAY -->
+    <div id="detailView" class="hidden">
+
+        <div class="card">
+
+            <div class="topbar">
+
+                <div>
+
+                    <div
+                        id="detailName"
+                        class="detail-title"
+                    ></div>
+
+                    <div
+                        id="detailSpecies"
+                        class="detail-species"
+                    ></div>
+
+                </div>
+
+                <button
+                    class="secondary"
+                    id="backButton"
+                >
+                    ← Geri
+                </button>
+
+            </div>
+
+
+            <div
+                id="currentStats"
+                class="big-stats"
+            ></div>
+
+
+            <button
+                class="primary action-button"
+                id="updateButton"
+            >
+                ＋ Güncelleme Ekle
+            </button>
+
+            <button
+                class="secondary action-button"
+                id="shareButton"
+            >
+                🔗 Günlüğü Paylaş
+            </button>
+
+            <div
+                id="shareBox"
+                class="share-box hidden"
+            ></div>
+
+            <button
+                class="danger action-button"
+                id="deleteButton"
+            >
+                Koloniyi Sil
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>📈 İşçi Gelişimi</h3>
+
+            <canvas id="chart"></canvas>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>📅 Koloni Geçmişi</h3>
+
+            <div id="history"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYLAŞILAN KOLONİ -->
+    <div id="sharedView" class="hidden">
+
+        <div class="card">
+
+            <div class="detail-title">
+                <span id="sharedName"></span>
+            </div>
+
+            <div
+                id="sharedSpecies"
+                class="detail-species"
+            ></div>
+
+            <div
+                id="sharedStats"
+                class="big-stats"
+            ></div>
+
+            <div class="notice">
+
+                👀 Bu koloni günlüğü
+                <b>salt okunurdur.</b>
+
+                <br>
+
+                Yalnızca koloni sahibi
+                güncelleme yapabilir.
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>📈 İşçi Gelişimi</h3>
+
+            <canvas id="sharedChart"></canvas>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>📅 Koloni Geçmişi</h3>
+
+            <div id="sharedHistory"></div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="card" style="margin-top:12px"><h3 style="margin-top:0">📈 İşçi Gelişimi</h3><canvas id="chart" class="chart"></canvas></div>
 
-<div class="card" style="margin-top:12px"><h3 style="margin-top:0">📅 Koloni Geçmişi</h3><div id="history" class="timeline"></div></div>
-</section>
-</main>
-<footer>Karınca Çiftliğim • Koloni Takip</footer>
+<!-- MODAL -->
 
-<div class="modal" id="modal"><div class="sheet">
-<button class="close" id="closeModal">×</button><h2 id="modalTitle">Yeni Koloni</h2>
-<form id="form" class="form">
-<div id="nameField"><label>Koloni adı</label><input id="name" placeholder="Örn. Messor #1" required></div>
-<div id="speciesField"><label>Cins / tür</label><input id="species" placeholder="Örn. Messor structor"></div>
-<div id="foundingField"><label>Kraliçenin koloni kuruluş tarihi</label><input id="founding" type="date"></div>
-<div class="row"><div><label>İşçi sayısı</label><input id="workers" type="number" min="0" value="0" required></div><div><label>Yumurta sayısı</label><input id="eggs" type="number" min="0" value="0"></div></div>
-<div class="row"><div><label>Larva sayısı</label><input id="larvae" type="number" min="0" value="0"></div><div><label>Pupa sayısı</label><input id="pupae" type="number" min="0" value="0"></div></div>
-<div class="row"><div><label>Sıcaklık (°C)</label><input id="temp" type="number" step="0.1" placeholder="25"></div><div><label>Nem (%)</label><input id="humidity" type="number" min="0" max="100" placeholder="70"></div></div>
-<div><label>Not</label><textarea id="note" placeholder="Beslenme, davranış, önemli değişiklikler..."></textarea></div>
-<div><label>📷 Fotoğraf ekle</label><input class="file" id="photos" type="file" accept="image/*" multiple><div id="preview" class="preview"></div></div>
-<button class="primary" type="submit">Kaydet</button>
-</form>
-</div></div>
+<div
+    id="modal"
+    class="modal"
+>
 
-<div class="modal" id="photoModal"><div class="sheet" style="text-align:center"><button class="close" id="closePhoto">×</button><img id="largePhoto" style="max-width:100%;max-height:78vh;border-radius:12px;object-fit:contain"></div></div>
+    <div class="modal-content">
+
+        <button
+            class="close"
+            id="closeModal"
+        >
+            ×
+        </button>
+
+        <h2 id="modalTitle">
+            Yeni Koloni
+        </h2>
+
+
+        <form id="colonyForm">
+
+            <div
+                id="colonyNameGroup"
+                class="form-group"
+            >
+
+                <label>Koloni adı</label>
+
+                <input
+                    id="colonyName"
+                    placeholder="Örn. Messor #1"
+                >
+
+            </div>
+
+
+            <div
+                id="speciesGroup"
+                class="form-group"
+            >
+
+                <label>Cins / Tür</label>
+
+                <input
+                    id="species"
+                    placeholder="Örn. Messor structor"
+                >
+
+            </div>
+
+
+            <div
+                id="foundingGroup"
+                class="form-group"
+            >
+
+                <label>Kuruluş tarihi</label>
+
+                <input
+                    id="foundingDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>İşçi sayısı</label>
+
+                <input
+                    id="workers"
+                    type="number"
+                    min="0"
+                    value="0"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Yumurta sayısı</label>
+
+                <input
+                    id="eggs"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Larva sayısı</label>
+
+                <input
+                    id="larvae"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Pupa sayısı</label>
+
+                <input
+                    id="pupae"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Sıcaklık °C</label>
+
+                <input
+                    id="temperature"
+                    type="number"
+                    step="0.1"
+                    placeholder="25"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Nem %</label>
+
+                <input
+                    id="humidity"
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="70"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Not</label>
+
+                <textarea
+                    id="note"
+                    placeholder="Bugünkü gözlemlerin..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>📷 Fotoğraf ekle</label>
+
+                <input
+                    id="photos"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                >
+
+                <div
+                    id="preview"
+                    class="preview"
+                ></div>
+
+            </div>
+
+
+            <button
+                class="primary"
+                type="submit"
+            >
+                Kaydet
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const KEY="karinca_ciftligim_koloniler_v2";let colonies=load(),currentId=null,mode="new",pendingPhotos=[];
-const $=id=>document.getElementById(id);
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
-function save(){localStorage.setItem(KEY,JSON.stringify(colonies))}
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function today(){let d=new Date(),z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
-function fmt(v){if(!v)return"—";let [y,m,d]=v.split("-");return`${d}.${m}.${y}`}
-function openModal(){ $("modal").classList.add("open") }
-function closeModal(){ $("modal").classList.remove("open");pendingPhotos=[];$("preview").innerHTML="" }
-function resetForm(){ $("form").reset();$("workers").value=0;$("eggs").value=0;$("larvae").value=0;$("pupae").value=0;$("founding").value=today();pendingPhotos=[];$("preview").innerHTML=""}
-function showList(){currentId=null;$("detailView").classList.add("hidden");$("listView").classList.remove("hidden");renderList()}
-function renderList(){
- let box=$("colonyList");
- if(!colonies.length){box.innerHTML='<div class="empty card">Henüz koloni oluşturmadın.<br>İlk kolonini oluşturmak için yukarıdaki butona bas.</div>';return}
- box.innerHTML=colonies.map(c=>{let last=(c.history||[]).at(-1)||{};return`<article class="card colony" onclick="openDetail('${c.id}')"><div class="title">🐜 ${esc(c.name)}</div><div class="meta">${esc(c.species||"Tür belirtilmedi")} • ${c.founding?fmt(c.founding):"Kuruluş tarihi yok"}</div><div class="stats"><div class="stat"><b>${last.workers??0}</b><span>İşçi</span></div><div class="stat"><b>${last.larvae??0}</b><span>Larva</span></div><div class="stat"><b>${last.pupae??0}</b><span>Pupa</span></div></div></article>`}).join("")
+
+/* =====================================
+   SUPABASE
+===================================== */
+
+const SUPABASE_URL =
+"https://vxyradcmcnkecjlfqegq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_37XPeyOYG-ZoDu0AJPlhGg_JbWdEG41";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =====================================
+   DEĞİŞKENLER
+===================================== */
+
+let currentUser = null;
+
+let currentColony = null;
+
+let authMode = "login";
+
+let selectedPhotos = [];
+
+
+/* =====================================
+   YARDIMCI
+===================================== */
+
+function show(id) {
+
+    document
+        .getElementById(id)
+        .classList
+        .remove("hidden");
+
 }
-function openDetail(id){currentId=id;$("listView").classList.add("hidden");$("detailView").classList.remove("hidden");renderDetail()}
-function renderDetail(){
- let c=colonies.find(x=>x.id===currentId);if(!c)return showList();let h=c.history||[],last=h.at(-1)||{};
- $("detailTitle").textContent="🐜 "+c.name;$("detailSub").textContent=(c.species||"Tür belirtilmedi")+" • Kuruluş: "+(c.founding?fmt(c.founding):"Belirtilmedi");
- $("currentStats").innerHTML=[["👷",last.workers??0,"İşçi"],["🥚",last.eggs??0,"Yumurta"],["🐛",last.larvae??0,"Larva"],["🟤",last.pupae??0,"Pupa"],["🌡️",last.temp?last.temp+"°C":"—","Sıcaklık"],["💧",last.humidity!==""&&last.humidity!=null?last.humidity+"%":"—","Nem"]].map(x=>`<div class="bigstat"><span>${x[0]} ${x[2]}</span><b>${x[1]}</b></div>`).join("");
- $("history").innerHTML=h.length?h.slice().reverse().map(r=>`<div class="record"><div class="record-date">${fmt(r.date)}</div><div class="record-stats">👷 ${r.workers} • 🥚 ${r.eggs} • 🐛 ${r.larvae} • 🟤 ${r.pupae}${r.temp!==""&&r.temp!=null?" • 🌡️ "+r.temp+"°C":""}${r.humidity!==""&&r.humidity!=null?" • 💧 "+r.humidity+"%":""}</div>${r.note?`<div class="record-note">${esc(r.note)}</div>`:""}${r.photos?.length?`<div class="photo-grid">${r.photos.map(p=>`<img src="${p}" onclick="event.stopPropagation();showPhoto('${p}')">`).join("")}</div>`:""}</div>`).join(""):"<div class='empty'>Henüz kayıt yok.</div>";
- drawChart(h)
+
+
+function hide(id) {
+
+    document
+        .getElementById(id)
+        .classList
+        .add("hidden");
+
 }
-function drawChart(h){
- let cv=$("chart"),dpr=devicePixelRatio||1,w=cv.clientWidth,hgt=230;cv.width=w*dpr;cv.height=hgt*dpr;let x=cv.getContext("2d");x.scale(dpr,dpr);x.clearRect(0,0,w,hgt);
- if(h.length<2){x.fillStyle="#888";x.font="13px system-ui";x.fillText("Grafik için en az 2 güncelleme kaydı gerekir.",15,35);return}
- let pad=30,max=Math.max(...h.map(r=>r.workers),1),min=0; x.strokeStyle="#ddd";x.lineWidth=1;
- for(let i=0;i<4;i++){let yy=pad+(hgt-pad*2)*i/3;x.beginPath();x.moveTo(pad,yy);x.lineTo(w-pad,yy);x.stroke()}
- x.strokeStyle="#222";x.lineWidth=2;x.beginPath();
- h.forEach((r,i)=>{let xx=pad+(w-pad*2)*(i/(h.length-1)),yy=hgt-pad-(r.workers-min)/(max-min||1)*(hgt-pad*2);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.stroke();
- x.fillStyle="#222";h.forEach((r,i)=>{let xx=pad+(w-pad*2)*(i/(h.length-1)),yy=hgt-pad-r.workers/(max||1)*(hgt-pad*2);x.beginPath();x.arc(xx,yy,4,0,Math.PI*2);x.fill()})
+
+
+function resetViews() {
+
+    hide("authView");
+    hide("listView");
+    hide("detailView");
+    hide("sharedView");
+
 }
-async function filesToData(files){
- let out=[];for(let f of files){if(!f.type.startsWith("image/"))continue;if(f.size>2*1024*1024){alert(f.name+" 2 MB'dan büyük, atlandı.");continue}
-  out.push(await new Promise(res=>{let r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)}))}
- return out
+
+
+function today() {
+
+    const d = new Date();
+
+    const month =
+        String(d.getMonth() + 1)
+        .padStart(2, "0");
+
+    const day =
+        String(d.getDate())
+        .padStart(2, "0");
+
+    return (
+        d.getFullYear()
+        + "-"
+        + month
+        + "-"
+        + day
+    );
+
 }
-$("photos").onchange=async e=>{pendingPhotos=await filesToData([...e.target.files]);$("preview").innerHTML=pendingPhotos.map(p=>`<img src="${p}">`).join("")}
-$("newColonyBtn").onclick=()=>{mode="new";resetForm();$("modalTitle").textContent="Yeni Koloni";openModal()}
-$("updateBtn").onclick=()=>{let c=colonies.find(x=>x.id===currentId);if(!c)return;mode="update";resetForm();$("modalTitle").textContent="Yeni Güncelleme";$("name").value=c.name;$("species").value=c.species||"";$("founding").value=c.founding||"";$("nameField").classList.add("hidden");$("speciesField").classList.add("hidden");$("foundingField").classList.add("hidden");openModal()}
-$("renameBtn").onclick=()=>{let c=colonies.find(x=>x.id===currentId);if(!c)return;let n=prompt("Yeni koloni adı:",c.name);if(n?.trim()){c.name=n.trim();save();renderDetail()}}
-$("deleteBtn").onclick=()=>{if(confirm("Bu koloni ve tüm geçmiş kayıtları silinsin mi?")){colonies=colonies.filter(c=>c.id!==currentId);save();showList()}}
-$("backBtn").onclick=showList;$("closeModal").onclick=()=>{closeModal();$("nameField").classList.remove("hidden");$("speciesField").classList.remove("hidden");$("foundingField").classList.remove("hidden")};
-$("modal").onclick=e=>{if(e.target===$("modal")){$("closeModal").click()}}
-$("closePhoto").onclick=()=>$("photoModal").classList.remove("open");$("photoModal").onclick=e=>{if(e.target===$("photoModal"))$("photoModal").classList.remove("open")}
-function showPhoto(src){$("largePhoto").src=src;$("photoModal").classList.add("open")}
-$("form").onsubmit=async e=>{
- e.preventDefault();let data={date:today(),workers:Number($("workers").value)||0,eggs:Number($("eggs").value)||0,larvae:Number($("larvae").value)||0,pupae:Number($("pupae").value)||0,temp:$("temp").value,humidity:$("humidity").value,note:$("note").value.trim(),photos:pendingPhotos};
- if(mode==="new"){let c={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),name:$("name").value.trim(),species:$("species").value.trim(),founding:$("founding").value,history:[data]};if(!c.name){alert("Koloni adı gir.");return}colonies.push(c);save();closeModal();renderList();openDetail(c.id)}
- else{let c=colonies.find(x=>x.id===currentId);c.history=c.history||[];c.history.push(data);save();closeModal();renderDetail()}
- $("nameField").classList.remove("hidden");$("speciesField").classList.remove("hidden");$("foundingField").classList.remove("hidden");
-};
-window.addEventListener("resize",()=>{if(currentId)drawChart((colonies.find(c=>c.id===currentId)||{}).history||[])});
-renderList();
+
+
+function formatDate(date) {
+
+    if (!date) return "—";
+
+    const parts =
+        date.split("-");
+
+    return (
+        parts[2]
+        + "."
+        + parts[1]
+        + "."
+        + parts[0]
+    );
+
+}
+
+
+function escapeHTML(text) {
+
+    return String(text ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================
+   AUTH
+===================================== */
+
+async function checkSession() {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .auth
+        .getSession();
+
+
+    if (
+        data &&
+        data.session
+    ) {
+
+        currentUser =
+            data.session.user;
+
+        showColonies();
+
+    }
+
+    else {
+
+        resetViews();
+
+        show("authView");
+
+    }
+
+}
+
+
+document
+    .getElementById("authForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            const message =
+                document
+                    .getElementById("authMessage");
+
+
+            message.textContent =
+                "İşlem yapılıyor...";
+
+
+            let result;
+
+
+            if (authMode === "login") {
+
+                result =
+                    await supabaseClient
+                        .auth
+                        .signInWithPassword({
+                            email,
+                            password
+                        });
+
+            }
+
+            else {
+
+                result =
+                    await supabaseClient
+                        .auth
+                        .signUp({
+                            email,
+                            password
+                        });
+
+            }
+
+
+            if (result.error) {
+
+                message.textContent =
+                    result.error.message;
+
+                return;
+
+            }
+
+
+            if (
+                authMode === "signup"
+                &&
+                !result.data.session
+            ) {
+
+                message.textContent =
+                    "Kayıt başarılı. E-posta doğrulaması gerekiyorsa e-postanı kontrol et.";
+
+                return;
+
+            }
+
+
+            currentUser =
+                result.data.user;
+
+            showColonies();
+
+        }
+    );
+
+
+document
+    .getElementById("authSwitchButton")
+    .addEventListener(
+        "click",
+        function() {
+
+            if (authMode === "login") {
+
+                authMode = "signup";
+
+                document
+                    .getElementById(
+                        "authDescription"
+                    )
+                    .textContent =
+                    "Kolonilerini kaydetmek için hesap oluştur.";
+
+                document
+                    .getElementById(
+                        "authButton"
+                    )
+                    .textContent =
+                    "Kayıt Ol";
+
+                document
+                    .getElementById(
+                        "authSwitchText"
+                    )
+                    .textContent =
+                    "Zaten hesabın var mı?";
+
+                document
+                    .getElementById(
+                        "authSwitchButton"
+                    )
+                    .textContent =
+                    "Giriş Yap";
+
+            }
+
+            else {
+
+                authMode = "login";
+
+                document
+                    .getElementById(
+                        "authDescription"
+                    )
+                    .textContent =
+                    "Koloni takip sistemine giriş yap.";
+
+                document
+                    .getElementById(
+                        "authButton"
+                    )
+                    .textContent =
+                    "Giriş Yap";
+
+                document
+                    .getElementById(
+                        "authSwitchText"
+                    )
+                    .textContent =
+                    "Hesabın yok mu?";
+
+                document
+                    .getElementById(
+                        "authSwitchButton"
+                    )
+                    .textContent =
+                    "Kayıt Ol";
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("logoutButton")
+    .addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            currentUser = null;
+
+            resetViews();
+
+            show("authView");
+
+        }
+    );
+
+
+/* =====================================
+   KOLONİ LİSTESİ
+===================================== */
+
+async function showColonies() {
+
+    resetViews();
+
+    show("listView");
+
+    document
+        .getElementById("userEmail")
+        .textContent =
+        currentUser.email;
+
+
+    await loadColonies();
+
+}
+
+
+async function loadColonies() {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colonies")
+        .select("*")
+        .eq(
+            "owner_id",
+            currentUser.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    const list =
+        document
+            .getElementById(
+                "colonyList"
+            );
+
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML = `
+            <div class="card empty">
+
+                Henüz bir kolonin yok.
+
+                <br><br>
+
+                İlk kolonini oluşturmak için
+                yukarıdaki butona bas.
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    for (const colony of data) {
+
+        const {
+            data: updates
+        } =
+        await supabaseClient
+            .from("colony_updates")
+            .select("*")
+            .eq(
+                "colony_id",
+                colony.id
+            )
+            .order(
+                "update_date",
+                {
+                    ascending: false
+                }
+            )
+            .limit(1);
+
+
+        const last =
+            updates &&
+            updates.length
+                ? updates[0]
+                : {
+                    workers: 0,
+                    eggs: 0,
+                    larvae: 0,
+                    pupae: 0
+                };
+
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "colony";
+
+
+        element.innerHTML = `
+
+            <div class="colony-name">
+
+                🐜
+                ${escapeHTML(
+                    colony.name
+                )}
+
+            </div>
+
+            <div class="colony-species">
+
+                ${escapeHTML(
+                    colony.species
+                    || "Tür belirtilmedi"
+                )}
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-number">
+                        ${last.workers || 0}
+                    </div>
+
+                    <div class="stat-label">
+                        İşçi
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-number">
+                        ${last.eggs || 0}
+                    </div>
+
+                    <div class="stat-label">
+                        Yumurta
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-number">
+                        ${last.larvae || 0}
+                    </div>
+
+                    <div class="stat-label">
+                        Larva
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-number">
+                        ${last.pupae || 0}
+                    </div>
+
+                    <div class="stat-label">
+                        Pupa
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        element.addEventListener(
+            "click",
+            function() {
+
+                openColony(
+                    colony.id
+                );
+
+            }
+        );
+
+
+        list.appendChild(element);
+
+    }
+
+}
+
+
+/* =====================================
+   KOLONİ AÇ
+===================================== */
+
+async function openColony(id) {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colonies")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    currentColony = data;
+
+
+    resetViews();
+
+    show("detailView");
+
+
+    document
+        .getElementById(
+            "shareBox"
+        )
+        .classList
+        .add("hidden");
+
+
+    await renderColony();
+
+}
+
+
+/* =====================================
+   KOLONİ DETAY
+===================================== */
+
+async function renderColony() {
+
+    const colony =
+        currentColony;
+
+
+    document
+        .getElementById(
+            "detailName"
+        )
+        .textContent =
+        "🐜 " + colony.name;
+
+
+    document
+        .getElementById(
+            "detailSpecies"
+        )
+        .textContent =
+        colony.species
+        || "Tür belirtilmedi";
+
+
+    const {
+        data: updates,
+        error
+    } =
+    await supabaseClient
+        .from("colony_updates")
+        .select("*")
+        .eq(
+            "colony_id",
+            colony.id
+        )
+        .order(
+            "update_date",
+            {
+                ascending: true
+            }
+        )
+        .order(
+            "created_at",
+            {
+                ascending: true
+            }
+        );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    const history =
+        updates || [];
+
+
+    const last =
+        history.length
+            ? history[
+                history.length - 1
+            ]
+            : {
+                workers: 0,
+                eggs: 0,
+                larvae: 0,
+                pupae: 0,
+                temperature: null,
+                humidity: null
+            };
+
+
+    document
+        .getElementById(
+            "currentStats"
+        )
+        .innerHTML = `
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.workers || 0}
+            </div>
+
+            <div class="big-stat-label">
+                👷 İşçi
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.eggs || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🥚 Yumurta
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.larvae || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🐛 Larva
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.pupae || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🟤 Pupa
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${
+                    last.temperature != null
+                    ? last.temperature + "°C"
+                    : "—"
+                }
+            </div>
+
+            <div class="big-stat-label">
+                🌡️ Sıcaklık
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${
+                    last.humidity != null
+                    ? last.humidity + "%"
+                    : "—"
+                }
+            </div>
+
+            <div class="big-stat-label">
+                💧 Nem
+            </div>
+
+        </div>
+
+    `;
+
+
+    await renderHistory(
+        history
+    );
+
+
+    drawChart(
+        document.getElementById(
+            "chart"
+        ),
+        history
+    );
+
+}
+
+
+/* =====================================
+   GEÇMİŞ
+===================================== */
+
+async function renderHistory(
+    history
+) {
+
+    const container =
+        document.getElementById(
+            "history"
+        );
+
+
+    if (!history.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Henüz güncelleme yok.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    for (
+        const record
+        of [...history].reverse()
+    ) {
+
+        const {
+            data: photos
+        } =
+        await supabaseClient
+            .from("colony_photos")
+            .select("*")
+            .eq(
+                "update_id",
+                record.id
+            );
+
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.className =
+            "history-item";
+
+
+        let photoHTML = "";
+
+
+        if (
+            photos &&
+            photos.length
+        ) {
+
+            photoHTML = `
+                <div class="photo-grid">
+
+                    ${
+                        photos
+                        .map(
+                            photo =>
+                            `
+                            <img
+                                src="${photo.photo_url}"
+                                onclick="window.open('${photo.photo_url}','_blank')"
+                            >
+                            `
+                        )
+                        .join("")
+                    }
+
+                </div>
+            `;
+
+        }
+
+
+        item.innerHTML = `
+
+            <div class="history-date">
+
+                ${formatDate(
+                    record.update_date
+                )}
+
+            </div>
+
+
+            <div class="history-stats">
+
+                👷 ${record.workers || 0}
+
+                • 🥚 ${record.eggs || 0}
+
+                • 🐛 ${record.larvae || 0}
+
+                • 🟤 ${record.pupae || 0}
+
+                ${
+                    record.temperature != null
+                    ? " • 🌡️ "
+                    + record.temperature
+                    + "°C"
+                    : ""
+                }
+
+                ${
+                    record.humidity != null
+                    ? " • 💧 "
+                    + record.humidity
+                    + "%"
+                    : ""
+                }
+
+            </div>
+
+
+            ${
+                record.note
+                ? `
+                    <div class="history-note">
+                        ${escapeHTML(
+                            record.note
+                        )}
+                    </div>
+                `
+                : ""
+            }
+
+
+            ${photoHTML}
+
+        `;
+
+
+        container.appendChild(
+            item
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   GRAFİK
+===================================== */
+
+function drawChart(
+    canvas,
+    data
+) {
+
+    const width =
+        canvas.clientWidth;
+
+    const height = 230;
+
+    const dpr =
+        window.devicePixelRatio
+        || 1;
+
+
+    canvas.width =
+        width * dpr;
+
+    canvas.height =
+        height * dpr;
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    ctx.scale(
+        dpr,
+        dpr
+    );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    if (data.length < 2) {
+
+        ctx.fillStyle =
+            "#888";
+
+        ctx.font =
+            "13px Arial";
+
+        ctx.fillText(
+            "Grafik için en az 2 güncelleme gerekir.",
+            15,
+            35
+        );
+
+        return;
+
+    }
+
+
+    const padding = 30;
+
+    const maxWorkers =
+        Math.max(
+            ...data.map(
+                item =>
+                    Number(
+                        item.workers
+                    ) || 0
+            ),
+            1
+        );
+
+
+    ctx.strokeStyle =
+        "#ddd";
+
+    ctx.lineWidth = 1;
+
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        const y =
+            padding
+            +
+            (
+                height
+                -
+                padding * 2
+            )
+            *
+            i
+            /
+            3;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            padding,
+            y
+        );
+
+        ctx.lineTo(
+            width - padding,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    ctx.strokeStyle =
+        "#222";
+
+    ctx.lineWidth = 2;
+
+
+    ctx.beginPath();
+
+
+    data.forEach(
+        (
+            item,
+            index
+        ) => {
+
+            const x =
+                padding
+                +
+                (
+                    width
+                    -
+                    padding * 2
+                )
+                *
+                (
+                    index
+                    /
+                    (
+                        data.length - 1
+                    )
+                );
+
+
+            const y =
+                height
+                -
+                padding
+                -
+                (
+                    (
+                        Number(
+                            item.workers
+                        ) || 0
+                    )
+                    /
+                    maxWorkers
+                )
+                *
+                (
+                    height
+                    -
+                    padding * 2
+                );
+
+
+            if (index === 0) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }
+
+            else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.stroke();
+
+
+    ctx.fillStyle =
+        "#222";
+
+
+    data.forEach(
+        (
+            item,
+            index
+        ) => {
+
+            const x =
+                padding
+                +
+                (
+                    width
+                    -
+                    padding * 2
+                )
+                *
+                (
+                    index
+                    /
+                    (
+                        data.length - 1
+                    )
+                );
+
+
+            const y =
+                height
+                -
+                padding
+                -
+                (
+                    (
+                        Number(
+                            item.workers
+                        ) || 0
+                    )
+                    /
+                    maxWorkers
+                )
+                *
+                (
+                    height
+                    -
+                    padding * 2
+                );
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x,
+                y,
+                4,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* =====================================
+   MODAL
+===================================== */
+
+function openModal() {
+
+    document
+        .getElementById(
+            "modal"
+        )
+        .classList
+        .add("open");
+
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById(
+            "modal"
+        )
+        .classList
+        .remove("open");
+
+    selectedPhotos = [];
+
+    document
+        .getElementById(
+            "preview"
+        )
+        .innerHTML = "";
+
+}
+
+
+function resetForm() {
+
+    document
+        .getElementById(
+            "colonyForm"
+        )
+        .reset();
+
+
+    document
+        .getElementById(
+            "workers"
+        )
+        .value = 0;
+
+
+    document
+        .getElementById(
+            "eggs"
+        )
+        .value = 0;
+
+
+    document
+        .getElementById(
+            "larvae"
+        )
+        .value = 0;
+
+
+    document
+        .getElementById(
+            "pupae"
+        )
+        .value = 0;
+
+
+    document
+        .getElementById(
+            "foundingDate"
+        )
+        .value = today();
+
+
+    selectedPhotos = [];
+
+
+    document
+        .getElementById(
+            "preview"
+        )
+        .innerHTML = "";
+
+}
+
+
+document
+    .getElementById(
+        "newColonyButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            resetForm();
+
+
+            document
+                .getElementById(
+                    "modalTitle"
+                )
+                .textContent =
+                "Yeni Koloni";
+
+
+            document
+                .getElementById(
+                    "colonyNameGroup"
+                )
+                .classList
+                .remove("hidden");
+
+
+            document
+                .getElementById(
+                    "speciesGroup"
+                )
+                .classList
+                .remove("hidden");
+
+
+            document
+                .getElementById(
+                    "foundingGroup"
+                )
+                .classList
+                .remove("hidden");
+
+
+            openModal();
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "updateButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            resetForm();
+
+
+            document
+                .getElementById(
+                    "modalTitle"
+                )
+                .textContent =
+                "Yeni Güncelleme";
+
+
+            document
+                .getElementById(
+                    "colonyNameGroup"
+                )
+                .classList
+                .add("hidden");
+
+
+            document
+                .getElementById(
+                    "speciesGroup"
+                )
+                .classList
+                .add("hidden");
+
+
+            document
+                .getElementById(
+                    "foundingGroup"
+                )
+                .classList
+                .add("hidden");
+
+
+            openModal();
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "closeModal"
+    )
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+
+document
+    .getElementById(
+        "modal"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                document.getElementById(
+                    "modal"
+                )
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+/* =====================================
+   FOTOĞRAF ÖNİZLEME
+===================================== */
+
+document
+    .getElementById(
+        "photos"
+    )
+    .addEventListener(
+        "change",
+        function(event) {
+
+            selectedPhotos =
+                Array.from(
+                    event.target.files
+                );
+
+
+            const preview =
+                document.getElementById(
+                    "preview"
+                );
+
+
+            preview.innerHTML = "";
+
+
+            selectedPhotos.forEach(
+                file => {
+
+                    const reader =
+                        new FileReader();
+
+
+                    reader.onload =
+                        function(event) {
+
+                            const img =
+                                document.createElement(
+                                    "img"
+                                );
+
+
+                            img.src =
+                                event.target.result;
+
+
+                            preview.appendChild(
+                                img
+                            );
+
+                        };
+
+
+                    reader.readAsDataURL(
+                        file
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+/* =====================================
+   FORM KAYDET
+===================================== */
+
+document
+    .getElementById(
+        "colonyForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            /*
+                YENİ KOLONİ
+            */
+
+            if (
+                !document
+                    .getElementById(
+                        "colonyNameGroup"
+                    )
+                    .classList
+                    .contains("hidden")
+            ) {
+
+                await createColony();
+
+            }
+
+
+            /*
+                GÜNCELLEME
+            */
+
+            else {
+
+                await createUpdate();
+
+            }
+
+        }
+    );
+
+
+async function createColony() {
+
+    const name =
+        document
+            .getElementById(
+                "colonyName"
+            )
+            .value
+            .trim();
+
+
+    if (!name) {
+
+        alert(
+            "Koloni adı gir."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Paylaşım tokenı
+    */
+
+    const shareToken =
+        crypto.randomUUID()
+        .replaceAll(
+            "-",
+            ""
+        );
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colonies")
+        .insert({
+
+            name: name,
+
+            species:
+                document
+                    .getElementById(
+                        "species"
+                    )
+                    .value
+                    .trim()
+                    || null,
+
+            founding_date:
+                document
+                    .getElementById(
+                        "foundingDate"
+                    )
+                    .value
+                    || null,
+
+            owner_id:
+                currentUser.id,
+
+            share_token:
+                shareToken
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    const success =
+        await createUpdate(
+            data.id
+        );
+
+
+    if (!success) {
+
+        return;
+
+    }
+
+
+    closeModal();
+
+
+    await openColony(
+        data.id
+    );
+
+}
+
+
+/* =====================================
+   GÜNCELLEME OLUŞTUR
+===================================== */
+
+async function createUpdate(
+    colonyId
+) {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colony_updates")
+        .insert({
+
+            colony_id:
+                colonyId,
+
+            update_date:
+                today(),
+
+            workers:
+                Number(
+                    document
+                        .getElementById(
+                            "workers"
+                        )
+                        .value
+                ) || 0,
+
+            eggs:
+                Number(
+                    document
+                        .getElementById(
+                            "eggs"
+                        )
+                        .value
+                ) || 0,
+
+            larvae:
+                Number(
+                    document
+                        .getElementById(
+                            "larvae"
+                        )
+                        .value
+                ) || 0,
+
+            pupae:
+                Number(
+                    document
+                        .getElementById(
+                            "pupae"
+                        )
+                        .value
+                ) || 0,
+
+            temperature:
+                document
+                    .getElementById(
+                        "temperature"
+                    )
+                    .value === ""
+                    ? null
+                    : Number(
+                        document
+                            .getElementById(
+                                "temperature"
+                            )
+                            .value
+                    ),
+
+            humidity:
+                document
+                    .getElementById(
+                        "humidity"
+                    )
+                    .value === ""
+                    ? null
+                    : Number(
+                        document
+                            .getElementById(
+                                "humidity"
+                            )
+                            .value
+                    ),
+
+            note:
+                document
+                    .getElementById(
+                        "note"
+                    )
+                    .value
+                    .trim()
+                    || null
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+        alert(
+            error.message
+        );
+
+        return false;
+
+    }
+
+
+    /*
+        FOTOĞRAFLAR
+    */
+
+    for (
+        const file
+        of selectedPhotos
+    ) {
+
+        if (
+            file.size >
+            5 * 1024 * 1024
+        ) {
+
+            alert(
+                file.name
+                +
+                " 5 MB'dan büyük."
+            );
+
+            continue;
+
+        }
+
+
+        const extension =
+            file.name
+                .split(".")
+                .pop();
+
+
+        const path =
+            currentUser.id
+            +
+            "/"
+            +
+            colonyId
+            +
+            "/"
+            +
+            data.id
+            +
+            "-"
+            +
+            crypto.randomUUID()
+            +
+            "."
+            +
+            extension;
+
+
+        const upload =
+            await supabaseClient
+                .storage
+                .from(
+                    "colony-photos"
+                )
+                .upload(
+                    path,
+                    file,
+                    {
+                        upsert: false
+                    }
+                );
+
+
+        if (
+            upload.error
+        ) {
+
+            alert(
+                "Fotoğraf yüklenemedi: "
+                +
+                upload.error.message
+            );
+
+            continue;
+
+        }
+
+
+        const publicURL =
+            supabaseClient
+                .storage
+                .from(
+                    "colony-photos"
+                )
+                .getPublicUrl(
+                    path
+                )
+                .data
+                .publicUrl;
+
+
+        const {
+            error:
+            photoError
+        } =
+        await supabaseClient
+            .from(
+                "colony_photos"
+            )
+            .insert({
+
+                update_id:
+                    data.id,
+
+                photo_url:
+                    publicURL
+
+            });
+
+
+        if (photoError) {
+
+            alert(
+                photoError.message
+            );
+
+        }
+
+    }
+
+
+    selectedPhotos = [];
+
+
+    return true;
+
+}
+
+
+/* =====================================
+   GERİ
+===================================== */
+
+document
+    .getElementById(
+        "backButton"
+    )
+    .addEventListener(
+        "click",
+        showColonies
+    );
+
+
+/* =====================================
+   SİL
+===================================== */
+
+document
+    .getElementById(
+        "deleteButton"
+    )
+    .addEventListener(
+        "click",
+        async function() {
+
+            if (
+                !confirm(
+                    "Bu koloniyi ve geçmişini tamamen silmek istediğine emin misin?"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("colonies")
+                .delete()
+                .eq(
+                    "id",
+                    currentColony.id
+                );
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+
+            currentColony =
+                null;
+
+
+            showColonies();
+
+        }
+    );
+
+
+/* =====================================
+   PAYLAŞ
+===================================== */
+
+document
+    .getElementById(
+        "shareButton"
+    )
+    .addEventListener(
+        "click",
+        async function() {
+
+            const url =
+                window.location.origin
+                +
+                window.location.pathname
+                +
+                "?share="
+                +
+                encodeURIComponent(
+                    currentColony.share_token
+                );
+
+
+            const box =
+                document.getElementById(
+                    "shareBox"
+                );
+
+
+            box.innerHTML = `
+
+                <b>
+                    🔗 Koloni Günlüğü
+                </b>
+
+                <br><br>
+
+                ${escapeHTML(
+                    url
+                )}
+
+                <br>
+
+                <button
+                    class="secondary"
+                    id="copyShareButton"
+                >
+                    📋 Linki Kopyala
+                </button>
+
+            `;
+
+
+            box.classList.remove(
+                "hidden"
+            );
+
+
+            document
+                .getElementById(
+                    "copyShareButton"
+                )
+                .onclick =
+                async function() {
+
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            url
+                        );
+
+
+                    this.textContent =
+                        "✓ Kopyalandı";
+
+                };
+
+        }
+    );
+
+
+/* =====================================
+   PAYLAŞILAN KOLONİ
+===================================== */
+
+async function showSharedColony(
+    token
+) {
+
+    resetViews();
+
+    show("sharedView");
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .rpc(
+            "get_shared_colony",
+            {
+                token: token
+            }
+        );
+
+
+    if (
+        error
+        ||
+        !data
+        ||
+        !data.colony
+    ) {
+
+        document
+            .getElementById(
+                "sharedName"
+            )
+            .textContent =
+            "Koloni bulunamadı";
+
+
+        document
+            .getElementById(
+                "sharedSpecies"
+            )
+            .textContent =
+            "Paylaşım bağlantısı geçersiz olabilir.";
+
+
+        return;
+
+    }
+
+
+    const colony =
+        data.colony;
+
+
+    const updates =
+        data.updates || [];
+
+
+    const last =
+        updates.length
+            ? updates[
+                updates.length - 1
+            ]
+            : {};
+
+
+    document
+        .getElementById(
+            "sharedName"
+        )
+        .textContent =
+        "🐜 "
+        +
+        colony.name;
+
+
+    document
+        .getElementById(
+            "sharedSpecies"
+        )
+        .textContent =
+        colony.species
+        ||
+        "Tür belirtilmedi";
+
+
+    document
+        .getElementById(
+            "sharedStats"
+        )
+        .innerHTML = `
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.workers || 0}
+            </div>
+
+            <div class="big-stat-label">
+                👷 İşçi
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.eggs || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🥚 Yumurta
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.larvae || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🐛 Larva
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${last.pupae || 0}
+            </div>
+
+            <div class="big-stat-label">
+                🟤 Pupa
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${
+                    last.temperature != null
+                    ? last.temperature
+                    + "°C"
+                    : "—"
+                }
+            </div>
+
+            <div class="big-stat-label">
+                🌡️ Sıcaklık
+            </div>
+
+        </div>
+
+
+        <div class="big-stat">
+
+            <div class="big-stat-number">
+                ${
+                    last.humidity != null
+                    ? last.humidity
+                    + "%"
+                    : "—"
+                }
+            </div>
+
+            <div class="big-stat-label">
+                💧 Nem
+            </div>
+
+        </div>
+
+    `;
+
+
+    const history =
+        document
+            .getElementById(
+                "sharedHistory"
+            );
+
+
+    if (!updates.length) {
+
+        history.innerHTML = `
+            <div class="empty">
+                Henüz güncelleme yok.
+            </div>
+        `;
+
+    }
+
+    else {
+
+        history.innerHTML =
+            updates
+                .slice()
+                .reverse()
+                .map(
+                    record =>
+                    `
+
+                    <div class="history-item">
+
+                        <div class="history-date">
+
+                            ${formatDate(
+                                record.update_date
+                            )}
+
+                        </div>
+
+
+                        <div class="history-stats">
+
+                            👷 ${record.workers || 0}
+
+                            • 🥚 ${record.eggs || 0}
+
+                            • 🐛 ${record.larvae || 0}
+
+                            • 🟤 ${record.pupae || 0}
+
+                            ${
+                                record.temperature != null
+                                ? " • 🌡️ "
+                                +
+                                record.temperature
+                                +
+                                "°C"
+                                : ""
+                            }
+
+                            ${
+                                record.humidity != null
+                                ? " • 💧 "
+                                +
+                                record.humidity
+                                +
+                                "%"
+                                : ""
+                            }
+
+                        </div>
+
+
+                        ${
+                            record.note
+                            ?
+                            `
+                                <div class="history-note">
+
+                                    ${escapeHTML(
+                                        record.note
+                                    )}
+
+                                </div>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
+
+                    `
+                )
+                .join("");
+
+    }
+
+
+    drawChart(
+        document.getElementById(
+            "sharedChart"
+        ),
+        updates
+    );
+
+}
+
+
+/* =====================================
+   SAYFA BAŞLANGIÇ
+===================================== */
+
+(async function() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const shareToken =
+        params.get(
+            "share"
+        );
+
+
+    if (shareToken) {
+
+        await showSharedColony(
+            shareToken
+        );
+
+    }
+
+    else {
+
+        await checkSession();
+
+    }
+
+})();
+
 </script>
+
 </body>
 </html>
