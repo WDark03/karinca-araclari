@@ -1598,7 +1598,6 @@ async function renderHistory(history) {
     const container =
         document.getElementById("history");
 
-
     if (!history || !history.length) {
 
         container.innerHTML = `
@@ -1610,105 +1609,106 @@ async function renderHistory(history) {
         return;
     }
 
-
     container.innerHTML = "";
 
-
     for (const record of [...history].reverse()) {
-
-        /*
-            FOTOĞRAFLARI GETİR
-        */
-
-        const {
-            data: photos,
-            error: photoLoadError
-        } = await supabaseClient
-            .from("colony_photos")
-            .select("id, update_id, photo_url")
-            .eq("update_id", record.id);
-
-
-        /*
-            FOTOĞRAF OKUMA HATASI
-        */
-
-        if (photoLoadError) {
-
-            console.error(
-                "FOTOĞRAFLAR YÜKLENEMEDİ:",
-                photoLoadError
-            );
-
-        }
-
-
-        /*
-            GEÇMİŞ KAYDI
-        */
 
         const item =
             document.createElement("div");
 
-
-        item.className =
-            "history-item";
-
+        item.className = "history-item";
 
         /*
-            FOTOĞRAF HTML
-        */
+         * FOTOĞRAFLARI ÇEK
+         */
+
+        let photos = [];
+
+        const photoResult =
+            await supabaseClient
+                .from("colony_photos")
+                .select("*")
+                .eq("update_id", record.id);
+
+        console.log(
+            "FOTOĞRAF SORGUSU:",
+            record.id,
+            photoResult
+        );
+
+        if (photoResult.error) {
+
+            console.error(
+                "FOTOĞRAF SORGULAMA HATASI:",
+                photoResult.error
+            );
+
+        } else {
+
+            photos =
+                photoResult.data || [];
+
+        }
+
+        /*
+         * FOTOĞRAF HTML
+         */
 
         let photoHTML = "";
 
-
-        if (
-            photos &&
-            photos.length > 0
-        ) {
+        if (photos.length > 0) {
 
             photoHTML = `
                 <div class="photo-grid">
-
                     ${photos.map(photo => {
 
-                        const photoURL =
-                            escapeHTML(
-                                photo.photo_url
-                            );
+                        if (!photo.photo_url) {
+                            return "";
+                        }
 
                         return `
-                            <img
-                                src="${photoURL}"
-                                alt="Koloni fotoğrafı"
-                                loading="lazy"
-                                onclick="window.open('${photoURL}', '_blank')"
-                                onerror="console.error('Fotoğraf görüntülenemedi:', '${photoURL}')"
+                            <a
+                                href="${escapeHTML(photo.photo_url)}"
+                                target="_blank"
+                                rel="noopener"
+                                style="display:block;"
                             >
+                                <img
+                                    src="${escapeHTML(photo.photo_url)}"
+                                    alt="Koloni fotoğrafı"
+                                    loading="lazy"
+                                    style="
+                                        display:block;
+                                        width:100%;
+                                        aspect-ratio:1;
+                                        object-fit:cover;
+                                        border-radius:10px;
+                                    "
+                                    onerror="
+                                        console.error(
+                                            'FOTOĞRAF AÇILAMADI:',
+                                            this.src
+                                        );
+                                    "
+                                >
+                            </a>
                         `;
 
                     }).join("")}
-
                 </div>
             `;
 
         }
 
-
         /*
-            GEÇMİŞ KAYDINI OLUŞTUR
-        */
+         * GEÇMİŞ KAYDI
+         */
 
         item.innerHTML = `
 
             <div class="history-date">
-
-                ${formatDate(
-                    record.update_date
-                )}
-
+                ${formatDate(record.update_date)}
             </div>
-
 
             <div class="history-stats">
 
@@ -1738,31 +1738,22 @@ async function renderHistory(history) {
 
             </div>
 
-
             ${
                 record.note
                 ? `
                     <div class="history-note">
-
-                        ${escapeHTML(
-                            record.note
-                        )}
-
+                        ${escapeHTML(record.note)}
                     </div>
                 `
                 : ""
             }
 
-
             ${photoHTML}
 
         `;
 
-
         container.appendChild(item);
-
     }
-
 }
 
 
