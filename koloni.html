@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171717">
+<title>Karınca Çiftliğim — Koloni Takip</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f4;color:#202020;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:#171717;color:#fff;padding:24px 18px}
+.header-inner{max-width:900px;margin:auto}
+.back{color:#ccc;text-decoration:none;font-size:13px}
+h1{margin:12px 0 5px;font-size:27px}
+.sub{margin:0;color:#cfcfcf;font-size:14px}
+main{max-width:900px;margin:auto;padding:18px 16px 40px}
+button{border:0;border-radius:12px;padding:12px 15px;font-size:15px;font-weight:700;cursor:pointer}
+.primary{background:#202020;color:#fff;width:100%;margin-bottom:15px}
+.secondary{background:#eee;color:#222}
+.danger{background:#f0dddd;color:#8b2222}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:17px;padding:17px}
+.colony{cursor:pointer}
+.colony:active{transform:scale(.99)}
+.title{font-size:19px;font-weight:800}
+.meta{font-size:13px;color:#777;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}
+.stat{background:#f5f5f5;border-radius:11px;padding:9px;text-align:center}
+.stat b{display:block;font-size:18px}
+.stat span{font-size:10px;color:#777}
+.empty{text-align:center;color:#777;padding:45px 10px}
+.form{display:grid;gap:11px}
+label{font-size:13px;font-weight:700;color:#555}
+input,textarea{width:100%;border:1px solid #d7d7d7;border-radius:12px;padding:12px;font-size:16px;background:#fff;font-family:inherit}
+textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;margin-top:14px}
+.actions button{flex:1}
+.hidden{display:none!important}
+.detail-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.detail-title{font-size:25px;font-weight:800}
+.detail-sub{font-size:13px;color:#777;margin-top:4px}
+.bigstats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}
+.bigstat{background:#f5f5f5;border-radius:13px;padding:14px}
+.bigstat b{font-size:23px;display:block}
+.bigstat span{font-size:12px;color:#777}
+.record{border-left:3px solid #ddd;padding:10px 0 10px 13px;margin:10px 0}
+.record-date{font-weight:800}
+.record-note{font-size:13px;color:#666;margin-top:4px;line-height:1.4}
+.notice{background:#fff7df;border:1px solid #ead99d;border-radius:13px;padding:12px;font-size:12px;color:#705d22;margin-bottom:14px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;padding:15px;align-items:flex-end}
+.modal.open{display:flex}
+.sheet{background:#fff;width:100%;max-width:650px;margin:auto;border-radius:20px;padding:20px;max-height:90vh;overflow:auto}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px;padding:0}
+footer{text-align:center;color:#999;font-size:12px;padding:25px}
+@media(min-width:650px){
+.grid{grid-template-columns:1fr 1fr}
+.bigstats{grid-template-columns:repeat(3,1fr)}
+.modal{align-items:center}
+.sheet{border-radius:20px}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="header-inner">
+<a class="back" href="index.html">← Karınca Araçları</a>
+<h1>📊 Koloni Takip</h1>
+<p class="sub">Kolonilerini kaydet, gelişimlerini takip et.</p>
+</div>
+</header>
+
+<main>
+<div id="listView">
+<button class="primary" id="newBtn">＋ Yeni Koloni Ekle</button>
+<div class="notice">Verilerin bu tarayıcıda saklanır. Şimdilik hesap veya sunucu gerekmez.</div>
+<div id="colonyList" class="grid"></div>
+</div>
+
+<div id="detailView" class="hidden">
+<div class="card">
+<div class="detail-head">
+<div>
+<div id="detailTitle" class="detail-title"></div>
+<div id="detailSub" class="detail-sub"></div>
+</div>
+<button class="secondary" id="backBtn">← Geri</button>
+</div>
+<div id="bigStats" class="bigstats"></div>
+<button class="primary" id="recordBtn">＋ Yeni Kayıt Ekle</button>
+<div class="actions">
+<button class="secondary" id="editBtn">Koloniyi Düzenle</button>
+<button class="danger" id="deleteBtn">Koloniyi Sil</button>
+</div>
+</div>
+<div class="card" style="margin-top:12px">
+<h3 style="margin-top:0">📅 Geçmiş Kayıtlar</h3>
+<div id="history"></div>
+</div>
+</div>
+</main>
+
+<footer>Karınca Çiftliğim • Koloni Takip</footer>
+
+<div class="modal" id="modal">
+<div class="sheet">
+<button class="close" id="closeModal">×</button>
+<h2 id="modalTitle">Yeni Koloni</h2>
+<form id="form" class="form">
+<div>
+<label>Koloni adı</label>
+<input id="name" placeholder="Örn. Messor #1" required>
+</div>
+<div>
+<label>Cins / tür</label>
+<input id="species" placeholder="Örn. Messor structor">
+</div>
+<div>
+<label>Kraliçenin koloni kuruluş tarihi</label>
+<input id="founding" type="date">
+</div>
+<div class="row">
+<div><label>İşçi sayısı</label><input id="workers" type="number" min="0" value="0" required></div>
+<div><label>Yumurta sayısı</label><input id="eggs" type="number" min="0" value="0"></div>
+</div>
+<div class="row">
+<div><label>Larva sayısı</label><input id="larvae" type="number" min="0" value="0"></div>
+<div><label>Pupa sayısı</label><input id="pupae" type="number" min="0" value="0"></div>
+</div>
+<div class="row">
+<div><label>Sıcaklık (°C)</label><input id="temp" type="number" step="0.1" placeholder="25"></div>
+<div><label>Nem (%)</label><input id="humidity" type="number" min="0" max="100" placeholder="70"></div>
+</div>
+<div>
+<label>Not</label>
+<textarea id="note" placeholder="Beslenme, davranış, önemli değişiklikler..."></textarea>
+</div>
+<button class="primary" type="submit">Kaydet</button>
+</form>
+</div>
+</div>
+
+<script>
+const KEY="karinca_ciftligim_koloniler_v1";
+let colonies=load();
+let currentId=null;
+let editingId=null;
+
+const $=id=>document.getElementById(id);
+function load(){
+ try{return JSON.parse(localStorage.getItem(KEY))||[]}
+ catch(e){return []}
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(colonies))}
+function esc(s){
+ return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))
+}
+function today(){
+ const d=new Date(), z=n=>String(n).padStart(2,"0");
+ return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+}
+function fmtDate(v){
+ if(!v)return "Tarih belirtilmedi";
+ const [y,m,d]=v.split("-");
+ return `${d}.${m}.${y}`;
+}
+function openModal(edit=false){
+ $("modalTitle").textContent=edit?"Koloniyi Düzenle":"Yeni Koloni";
+ $("modal").classList.add("open");
+}
+function closeModal(){$("modal").classList.remove("open")}
+function resetForm(){
+ $("form").reset();
+ $("workers").value=0;$("eggs").value=0;$("larvae").value=0;$("pupae").value=0;
+ editingId=null;
+}
+function fillForm(c){
+ $("name").value=c.name||"";
+ $("species").value=c.species||"";
+ $("founding").value=c.founding||"";
+ $("workers").value=c.workers??0;
+ $("eggs").value=c.eggs??0;
+ $("larvae").value=c.larvae??0;
+ $("pupae").value=c.pupae??0;
+ $("temp").value=c.temp??"";
+ $("humidity").value=c.humidity??"";
+ $("note").value=c.note||"";
+}
+function renderList(){
+ const box=$("colonyList");
+ if(!colonies.length){
+  box.innerHTML='<div class="empty card">Henüz koloni eklemedin.<br>İlk kolonini oluşturmak için yukarıdaki butona bas.</div>';
+  return;
+ }
+ box.innerHTML=colonies.map(c=>`
+  <article class="card colony" onclick="openDetail('${c.id}')">
+   <div class="title">🐜 ${esc(c.name)}</div>
+   <div class="meta">${esc(c.species||"Tür belirtilmedi")} • ${c.founding?fmtDate(c.founding):"Kuruluş tarihi yok"}</div>
+   <div class="stats">
+    <div class="stat"><b>${c.workers||0}</b><span>İşçi</span></div>
+    <div class="stat"><b>${c.larvae||0}</b><span>Larva</span></div>
+    <div class="stat"><b>${c.pupae||0}</b><span>Pupa</span></div>
+   </div>
+  </article>`).join("");
+}
+function openDetail(id){
+ currentId=id;
+ $("listView").classList.add("hidden");
+ $("detailView").classList.remove("hidden");
+ renderDetail();
+}
+function renderDetail(){
+ const c=colonies.find(x=>x.id===currentId);
+ if(!c){backList();return}
+ $("detailTitle").textContent="🐜 "+c.name;
+ $("detailSub").textContent=(c.species||"Tür belirtilmedi")+" • Kuruluş: "+(c.founding?fmtDate(c.founding):"Belirtilmedi");
+ $("bigStats").innerHTML=[
+  ["👷",c.workers||0,"İşçi"],["🥚",c.eggs||0,"Yumurta"],["🐛",c.larvae||0,"Larva"],
+  ["🟤",c.pupae||0,"Pupa"],["🌡️",c.temp?c.temp+"°C":"—","Sıcaklık"],["💧",c.humidity!=null&&c.humidity!==""?c.humidity+"%":"—","Nem"]
+ ].map(x=>`<div class="bigstat"><span>${x[0]} ${x[2]}</span><b>${x[1]}</b></div>`).join("");
+ const history=c.history||[];
+ $("history").innerHTML=history.length?history.slice().reverse().map(r=>`
+  <div class="record">
+   <div class="record-date">${fmtDate(r.date)} — ${r.workers} işçi</div>
+   <div style="font-size:12px;color:#777">🥚 ${r.eggs} • 🐛 ${r.larvae} • 🟤 ${r.pupae} ${r.temp!==""&&r.temp!=null?"• 🌡️ "+r.temp+"°C":""} ${r.humidity!==""&&r.humidity!=null?"• 💧 "+r.humidity+"%":""}</div>
+   ${r.note?`<div class="record-note">${esc(r.note)}</div>`:""}
+  </div>`).join(""):"<div class='empty'>Henüz geçmiş kaydı yok.</div>";
+}
+function backList(){
+ currentId=null;
+ $("detailView").classList.add("hidden");
+ $("listView").classList.remove("hidden");
+ renderList();
+}
+$("newBtn").onclick=()=>{
+ resetForm();
+ $("founding").value=today();
+ openModal(false);
+};
+$("closeModal").onclick=closeModal;
+$("modal").onclick=e=>{if(e.target===$("modal"))closeModal()};
+$("backBtn").onclick=backList;
+$("recordBtn").onclick=()=>{
+ const c=colonies.find(x=>x.id===currentId);
+ if(!c)return;
+ resetForm(); fillForm(c);
+ $("modalTitle").textContent="Yeni Kayıt";
+ editingId=null;
+ $("name").value=c.name; $("species").value=c.species; $("founding").value=c.founding||"";
+ openModal(false);
+ $("name").disabled=true;$("species").disabled=true;$("founding").disabled=true;
+};
+$("editBtn").onclick=()=>{
+ const c=colonies.find(x=>x.id===currentId); if(!c)return;
+ editingId=c.id; fillForm(c); $("name").disabled=false;$("species").disabled=false;$("founding").disabled=false;
+ openModal(true);
+};
+$("deleteBtn").onclick=()=>{
+ if(confirm("Bu koloniyi ve tüm geçmiş kayıtlarını silmek istediğine emin misin?")){
+  colonies=colonies.filter(c=>c.id!==currentId);save();backList();
+ }
+};
+
+$("form").onsubmit=e=>{
+ e.preventDefault();
+ const data={
+  name:$("name").value.trim(),species:$("species").value.trim(),founding:$("founding").value,
+  workers:Number($("workers").value)||0,eggs:Number($("eggs").value)||0,larvae:Number($("larvae").value)||0,
+  pupae:Number($("pupae").value)||0,temp:$("temp").value,humidity:$("humidity").value,note:$("note").value.trim()
+ };
+ if(!data.name){alert("Koloni adı gir.");return}
+ if($("modalTitle").textContent==="Yeni Kayıt" && currentId){
+  const c=colonies.find(x=>x.id===currentId);
+  c.workers=data.workers;c.eggs=data.eggs;c.larvae=data.larvae;c.pupae=data.pupae;c.temp=data.temp;c.humidity=data.humidity;c.note=data.note;
+  c.history=c.history||[];
+  c.history.push({date:today(),workers:data.workers,eggs:data.eggs,larvae:data.larvae,pupae:data.pupae,temp:data.temp,humidity:data.humidity,note:data.note});
+ }else if(editingId){
+  const c=colonies.find(x=>x.id===editingId);
+  Object.assign(c,data);
+ }else{
+  const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  data.id=id;
+  data.history=[{date:today(),workers:data.workers,eggs:data.eggs,larvae:data.larvae,pupae:data.pupae,temp:data.temp,humidity:data.humidity,note:data.note}];
+  colonies.push(data);
+ }
+ save(); closeModal(); $("name").disabled=false;$("species").disabled=false;$("founding").disabled=false;
+ if(currentId)renderDetail();else renderList();
+};
+renderList();
+</script>
+</body>
+</html>
