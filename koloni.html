@@ -3005,20 +3005,15 @@ document
    PAYLAŞILAN KOLONİ
 ===================================== */
 
-async function showSharedColony(
-    token
-) {
+async function showSharedColony(token) {
 
     resetViews();
-
     show("sharedView");
-
 
     const {
         data,
         error
-    } =
-    await supabaseClient
+    } = await supabaseClient
         .rpc(
             "get_shared_colony",
             {
@@ -3026,174 +3021,128 @@ async function showSharedColony(
             }
         );
 
+    console.log("PAYLAŞILAN KOLONİ:", data);
+    console.log("RPC HATASI:", error);
 
     if (
-        error
-        ||
-        !data
-        ||
+        error ||
+        !data ||
         !data.colony
     ) {
 
         document
-            .getElementById(
-                "sharedName"
-            )
+            .getElementById("sharedName")
             .textContent =
             "Koloni bulunamadı";
 
-
         document
-            .getElementById(
-                "sharedSpecies"
-            )
+            .getElementById("sharedSpecies")
             .textContent =
             "Paylaşım bağlantısı geçersiz olabilir.";
 
-
         return;
-
     }
 
+    const colony = data.colony;
 
-    const colony =
-        data.colony;
-
-
-    const updates =
-        data.updates || [];
-
+    const updates = data.updates || [];
 
     const last =
         updates.length
-            ? updates[
-                updates.length - 1
-            ]
+            ? updates[updates.length - 1]
             : {};
 
 
-    document
-        .getElementById(
-            "sharedName"
-        )
-        .textContent =
-        "🐜 "
-        +
-        colony.name;
-
+    /* KOLONİ BİLGİLERİ */
 
     document
-        .getElementById(
-            "sharedSpecies"
-        )
+        .getElementById("sharedName")
         .textContent =
-        colony.species
-        ||
+        "🐜 " + colony.name;
+
+    document
+        .getElementById("sharedSpecies")
+        .textContent =
+        colony.species ||
         "Tür belirtilmedi";
 
 
+    /* İSTATİSTİKLER */
+
     document
-        .getElementById(
-            "sharedStats"
-        )
+        .getElementById("sharedStats")
         .innerHTML = `
 
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${last.workers || 0}
             </div>
-
             <div class="big-stat-label">
                 👷 İşçi
             </div>
-
         </div>
 
-
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${last.eggs || 0}
             </div>
-
             <div class="big-stat-label">
                 🥚 Yumurta
             </div>
-
         </div>
 
-
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${last.larvae || 0}
             </div>
-
             <div class="big-stat-label">
                 🐛 Larva
             </div>
-
         </div>
 
-
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${last.pupae || 0}
             </div>
-
             <div class="big-stat-label">
                 🟤 Pupa
             </div>
-
         </div>
 
-
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${
                     last.temperature != null
-                    ? last.temperature
-                    + "°C"
+                    ? last.temperature + "°C"
                     : "—"
                 }
             </div>
-
             <div class="big-stat-label">
                 🌡️ Sıcaklık
             </div>
-
         </div>
 
-
         <div class="big-stat">
-
             <div class="big-stat-number">
                 ${
                     last.humidity != null
-                    ? last.humidity
-                    + "%"
+                    ? last.humidity + "%"
                     : "—"
                 }
             </div>
-
             <div class="big-stat-label">
                 💧 Nem
             </div>
-
         </div>
-
     `;
 
 
-    const history =
-        document
-            .getElementById(
-                "sharedHistory"
-            );
+    /* GEÇMİŞ */
 
+    const history =
+        document.getElementById(
+            "sharedHistory"
+        );
 
     if (!updates.length) {
 
@@ -3203,86 +3152,119 @@ async function showSharedColony(
             </div>
         `;
 
-    }
+    } else {
 
-    else {
+        history.innerHTML = "";
 
-        history.innerHTML =
-            updates
-                .slice()
-                .reverse()
-                .map(
-                    record =>
-                    `
+        [...updates]
+            .reverse()
+            .forEach(record => {
 
-                    <div class="history-item">
+                const item =
+                    document.createElement("div");
 
-                        <div class="history-date">
-
-                            ${formatDate(
-                                record.update_date
-                            )}
-
-                        </div>
+                item.className =
+                    "history-item";
 
 
-                        <div class="history-stats">
+                /* FOTOĞRAFLAR */
 
-                            👷 ${record.workers || 0}
+                let photoHTML = "";
 
-                            • 🥚 ${record.eggs || 0}
+                if (
+                    record.photos &&
+                    record.photos.length
+                ) {
 
-                            • 🐛 ${record.larvae || 0}
+                    photoHTML = `
+                        <div class="photo-grid">
 
-                            • 🟤 ${record.pupae || 0}
+                            ${record.photos.map(photo => {
 
-                            ${
-                                record.temperature != null
-                                ? " • 🌡️ "
-                                +
-                                record.temperature
-                                +
-                                "°C"
-                                : ""
-                            }
+                                const url =
+                                    escapeHTML(
+                                        photo.photo_url
+                                    );
 
-                            ${
-                                record.humidity != null
-                                ? " • 💧 "
-                                +
-                                record.humidity
-                                +
-                                "%"
-                                : ""
-                            }
+                                return `
+                                    <img
+                                        src="${url}"
+                                        alt="Koloni fotoğrafı"
+                                        loading="lazy"
+                                        onclick="window.open('${url}', '_blank')"
+                                        onerror="console.error('Paylaşılan fotoğraf yüklenemedi:', '${url}')"
+                                    >
+                                `;
+
+                            }).join("")}
 
                         </div>
+                    `;
+                }
 
+
+                item.innerHTML = `
+
+                    <div class="history-date">
+                        ${formatDate(
+                            record.update_date
+                        )}
+                    </div>
+
+                    <div class="history-stats">
+
+                        👷 ${record.workers || 0}
+
+                        • 🥚 ${record.eggs || 0}
+
+                        • 🐛 ${record.larvae || 0}
+
+                        • 🟤 ${record.pupae || 0}
 
                         ${
-                            record.note
-                            ?
-                            `
-                                <div class="history-note">
+                            record.temperature != null
+                            ? " • 🌡️ "
+                            + record.temperature
+                            + "°C"
+                            : ""
+                        }
 
-                                    ${escapeHTML(
-                                        record.note
-                                    )}
-
-                                </div>
-                            `
-                            :
-                            ""
+                        ${
+                            record.humidity != null
+                            ? " • 💧 "
+                            + record.humidity
+                            + "%"
+                            : ""
                         }
 
                     </div>
 
-                    `
-                )
-                .join("");
+                    ${
+                        record.note
+                        ?
+                        `
+                        <div class="history-note">
+                            ${escapeHTML(
+                                record.note
+                            )}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                    ${photoHTML}
+
+                `;
+
+                history.appendChild(item);
+
+            });
 
     }
 
+
+    /* GRAFİK */
 
     drawChart(
         document.getElementById(
@@ -3290,7 +3272,6 @@ async function showSharedColony(
         ),
         updates
     );
-
 }
 
 
