@@ -3308,7 +3308,662 @@ async function showSharedColony(token) {
     }
 
 })();
+/* =========================================================
+   KAYIT DÜZENLEME SİSTEMİ
+========================================================= */
 
+let editingUpdateId = null;
+
+
+/* ---------------------------------------------------------
+   DÜZENLE BUTONU STİLİ
+--------------------------------------------------------- */
+
+const editStyle = document.createElement("style");
+
+editStyle.textContent = `
+
+.history-edit-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.history-edit-button {
+    background: #eeeeee;
+    color: #222;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.history-edit-button:hover {
+    background: #dddddd;
+}
+
+`;
+
+document.head.appendChild(editStyle);
+
+
+/* ---------------------------------------------------------
+   MEVCUT renderHistory FONKSİYONUNU SARMALA
+--------------------------------------------------------- */
+
+const originalRenderHistory = renderHistory;
+
+renderHistory = async function(history) {
+
+    await originalRenderHistory(history);
+
+    const container =
+        document.getElementById("history");
+
+    if (!container) return;
+
+
+    /*
+        Her geçmiş kaydının altına
+        düzenle butonu ekle
+    */
+
+    const items =
+        container.querySelectorAll(
+            ".history-item"
+        );
+
+
+    const reversedHistory =
+        [...history].reverse();
+
+
+    items.forEach(
+        (item, index) => {
+
+            const record =
+                reversedHistory[index];
+
+            if (!record) return;
+
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "history-edit-row";
+
+
+            const button =
+                document.createElement("button");
+
+            button.type =
+                "button";
+
+            button.className =
+                "history-edit-button";
+
+            button.textContent =
+                "✏️ Düzenle";
+
+
+            button.addEventListener(
+                "click",
+                function(event) {
+
+                    event.stopPropagation();
+
+                    openEditUpdate(
+                        record.id
+                    );
+
+                }
+            );
+
+
+            row.appendChild(button);
+
+            item.appendChild(row);
+
+        }
+    );
+
+};
+
+
+/* ---------------------------------------------------------
+   KAYDI DÜZENLEME MODALINI AÇ
+--------------------------------------------------------- */
+
+async function openEditUpdate(updateId) {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colony_updates")
+        .select("*")
+        .eq(
+            "id",
+            updateId
+        )
+        .single();
+
+
+    if (error) {
+
+        alert(
+            "Kayıt alınamadı:\n\n"
+            +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    if (!data) {
+
+        alert(
+            "Kayıt bulunamadı."
+        );
+
+        return;
+
+    }
+
+
+    editingUpdateId =
+        data.id;
+
+
+    /* MODAL BAŞLIĞI */
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        "Güncellemeyi Düzenle";
+
+
+    /* KOLON BİLGİLERİNİ GİZLE */
+
+    document
+        .getElementById(
+            "colonyNameGroup"
+        )
+        .classList
+        .add("hidden");
+
+
+    document
+        .getElementById(
+            "speciesGroup"
+        )
+        .classList
+        .add("hidden");
+
+
+    document
+        .getElementById(
+            "foundingGroup"
+        )
+        .classList
+        .add("hidden");
+
+
+    /* MEVCUT DEĞERLERİ FORMA DOLDUR */
+
+    document
+        .getElementById("workers")
+        .value =
+        data.workers ?? 0;
+
+
+    document
+        .getElementById("eggs")
+        .value =
+        data.eggs ?? 0;
+
+
+    document
+        .getElementById("larvae")
+        .value =
+        data.larvae ?? 0;
+
+
+    document
+        .getElementById("pupae")
+        .value =
+        data.pupae ?? 0;
+
+
+    document
+        .getElementById("temperature")
+        .value =
+        data.temperature ?? "";
+
+
+    document
+        .getElementById("humidity")
+        .value =
+        data.humidity ?? "";
+
+
+    document
+        .getElementById("note")
+        .value =
+        data.note ?? "";
+
+
+    /* FOTOĞRAF SEÇİMİNİ TEMİZLE */
+
+    selectedPhotos = [];
+
+
+    document
+        .getElementById("photos")
+        .value = "";
+
+
+    document
+        .getElementById("preview")
+        .innerHTML = "";
+
+
+    /* KAYDET BUTONU */
+
+    const saveButton =
+        document.querySelector(
+            "#colonyForm button[type='submit']"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Değişiklikleri Kaydet";
+
+    }
+
+
+    /* BİLGİ MESAJI */
+
+    let notice =
+        document.getElementById(
+            "editModeNotice"
+        );
+
+
+    if (!notice) {
+
+        notice =
+            document.createElement(
+                "div"
+            );
+
+        notice.id =
+            "editModeNotice";
+
+        notice.style.background =
+            "#eef6ff";
+
+        notice.style.color =
+            "#24527a";
+
+        notice.style.padding =
+            "10px 12px";
+
+        notice.style.borderRadius =
+            "12px";
+
+        notice.style.marginBottom =
+            "14px";
+
+        notice.style.fontSize =
+            "13px";
+
+
+        document
+            .getElementById(
+                "colonyForm"
+            )
+            .prepend(notice);
+
+    }
+
+
+    notice.textContent =
+        "✏️ Eski kaydı düzenliyorsun. Değişikliklerini yaptıktan sonra kaydet.";
+
+
+    openModal();
+
+}
+
+
+/* ---------------------------------------------------------
+   DÜZENLEME MODUNU TEMİZLE
+--------------------------------------------------------- */
+
+function clearEditMode() {
+
+    editingUpdateId =
+        null;
+
+
+    const notice =
+        document.getElementById(
+            "editModeNotice"
+        );
+
+
+    if (notice) {
+
+        notice.remove();
+
+    }
+
+
+    const saveButton =
+        document.querySelector(
+            "#colonyForm button[type='submit']"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Kaydet";
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   FORM GÖNDERİMİNİ YAKALA
+--------------------------------------------------------- */
+
+document
+    .getElementById(
+        "colonyForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            /*
+                Normal kayıt ise mevcut sistem çalışsın.
+            */
+
+            if (!editingUpdateId) {
+
+                return;
+
+            }
+
+
+            /*
+                Düzenleme modundaysa
+                mevcut createUpdate çalışmasın.
+            */
+
+            event.preventDefault();
+
+            event.stopImmediatePropagation();
+
+
+            await updateExistingRecord(
+                editingUpdateId
+            );
+
+        },
+        true
+    );
+
+
+/* ---------------------------------------------------------
+   VERİTABANINDAKİ KAYDI GÜNCELLE
+--------------------------------------------------------- */
+
+async function updateExistingRecord(
+    updateId
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Oturum bulunamadı. Tekrar giriş yap."
+        );
+
+        return;
+
+    }
+
+
+    const updateData = {
+
+        workers:
+            Number(
+                document
+                    .getElementById(
+                        "workers"
+                    )
+                    .value
+            ) || 0,
+
+
+        eggs:
+            Number(
+                document
+                    .getElementById(
+                        "eggs"
+                    )
+                    .value
+            ) || 0,
+
+
+        larvae:
+            Number(
+                document
+                    .getElementById(
+                        "larvae"
+                    )
+                    .value
+            ) || 0,
+
+
+        pupae:
+            Number(
+                document
+                    .getElementById(
+                        "pupae"
+                    )
+                    .value
+            ) || 0,
+
+
+        temperature:
+            document
+                .getElementById(
+                    "temperature"
+                )
+                .value === ""
+                ? null
+                : Number(
+                    document
+                        .getElementById(
+                            "temperature"
+                        )
+                        .value
+                ),
+
+
+        humidity:
+            document
+                .getElementById(
+                    "humidity"
+                )
+                .value === ""
+                ? null
+                : Number(
+                    document
+                        .getElementById(
+                            "humidity"
+                        )
+                        .value
+                ),
+
+
+        note:
+            document
+                .getElementById(
+                    "note"
+                )
+                .value
+                .trim()
+                || null
+
+    };
+
+
+    console.log(
+        "KAYIT DÜZENLENİYOR:",
+        updateId
+    );
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("colony_updates")
+        .update(
+            updateData
+        )
+        .eq(
+            "id",
+            updateId
+        )
+        .select()
+        .single();
+
+
+    if (error) {
+
+        console.error(
+            "DÜZENLEME HATASI:",
+            error
+        );
+
+        alert(
+            "Kayıt güncellenemedi:\n\n"
+            +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "KAYIT GÜNCELLENDİ:",
+        data
+    );
+
+
+    /* MODU TEMİZLE */
+
+    clearEditMode();
+
+
+    /* MODALI KAPAT */
+
+    document
+        .getElementById(
+            "modal"
+        )
+        .classList
+        .remove("open");
+
+
+    /* FORMU TEMİZLE */
+
+    selectedPhotos = [];
+
+
+    document
+        .getElementById(
+            "preview"
+        )
+        .innerHTML = "";
+
+
+    document
+        .getElementById(
+            "photos"
+        )
+        .value = "";
+
+
+    /* KOLONİYİ YENİDEN ÇİZ */
+
+    await renderColony();
+
+
+    alert(
+        "✓ Kayıt başarıyla güncellendi."
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   MODAL KAPATILIRSA DÜZENLEMEYİ İPTAL ET
+--------------------------------------------------------- */
+
+const originalCloseModalForEdit =
+    closeModal;
+
+
+closeModal = function() {
+
+    clearEditMode();
+
+    originalCloseModalForEdit();
+
+};
+
+
+/* ---------------------------------------------------------
+   YENİ KOLONİ / YENİ GÜNCELLEME AÇILIRKEN
+   DÜZENLEME MODUNU TEMİZLE
+--------------------------------------------------------- */
+
+const originalResetFormForEdit =
+    resetForm;
+
+
+resetForm = function() {
+
+    clearEditMode();
+
+    originalResetFormForEdit();
+
+};
+
+
+console.log(
+    "✓ Kayıt düzenleme sistemi aktif."
+);
 </script>
 
 </body>
