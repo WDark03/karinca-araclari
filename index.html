@@ -1,204 +1,112 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Karınca Çiftliği Araçları</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f3f3;
-            color: #222;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-            padding: 25px 18px;
-        }
-
-        .header {
-            text-align: center;
-            padding: 25px 10px;
-        }
-
-        .logo {
-            font-size: 48px;
-        }
-
-        h1 {
-            margin: 10px 0 5px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #777;
-            font-size: 15px;
-        }
-
-        .tools {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 25px;
-        }
-
-        .tool {
-            background: white;
-            border-radius: 18px;
-            padding: 25px 15px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .tool:hover {
-            transform: translateY(-3px);
-        }
-
-        .tool-icon {
-            font-size: 38px;
-            margin-bottom: 10px;
-        }
-
-        .tool-title {
-            font-size: 17px;
-            font-weight: bold;
-        }
-
-        .tool-description {
-            margin-top: 7px;
-            font-size: 13px;
-            color: #777;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 35px;
-            color: #999;
-            font-size: 12px;
-        }
-
-        @media (max-width: 400px) {
-
-            .tools {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#151515">
+<title>Karınca Çiftliğim — Karınca Sözlüğü</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f4;color:#202020;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:#171717;color:#fff;padding:28px 18px 22px;position:sticky;top:0;z-index:5}
+.header-inner{max-width:900px;margin:auto}
+h1{margin:0 0 6px;font-size:27px}
+.header-sub{margin:0;color:#cfcfcf;font-size:14px}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.controls{display:grid;gap:10px;margin-bottom:15px}
+input,select{width:100%;border:1px solid #d5d5d5;border-radius:13px;padding:14px 15px;font-size:16px;background:#fff;outline:none}
+input:focus,select:focus{border-color:#777}
+.count{font-size:13px;color:#777;margin:8px 2px 12px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.card{background:#fff;border:1px solid #e6e6e6;border-radius:16px;padding:16px;cursor:pointer;transition:.15s}
+.card:active{transform:scale(.99)}
+.num{font-size:12px;color:#999;margin-bottom:5px}
+.name{font-weight:750;font-size:18px;margin-bottom:7px}
+.preview{font-size:14px;line-height:1.45;color:#555}
+.tag{display:inline-block;margin-top:10px;padding:5px 9px;border-radius:999px;background:#f0f0f0;font-size:11px;color:#666}
+.empty{text-align:center;padding:45px 15px;color:#777}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10;padding:16px;align-items:flex-end}
+.modal.open{display:flex}
+.sheet{background:#fff;border-radius:20px 20px 10px 10px;width:100%;max-width:900px;margin:auto;padding:22px;max-height:85vh;overflow:auto}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px}
+.detail-num{font-size:13px;color:#999}
+.detail-title{font-size:25px;font-weight:800;margin:5px 45px 15px 0}
+.detail-text{font-size:16px;line-height:1.65;color:#333}
+.detail-tag{margin-top:18px}
+footer{text-align:center;color:#999;font-size:12px;padding:30px 15px}
+@media(min-width:650px){.controls{grid-template-columns:2fr 1fr}.grid{grid-template-columns:1fr 1fr}.modal{align-items:center}.sheet{border-radius:20px}}
+</style>
 </head>
-
 <body>
+<header><div class="header-inner">
+<h1>🐜 Karınca Sözlüğü</h1>
+<p class="header-sub">Karınca Çiftliğim • 190 terim</p>
+</div></header>
+<main class="wrap">
+<section class="controls">
+<input id="search" type="search" placeholder="🔎 Terim ara..." autocomplete="off">
+<select id="category"><option value="">Tüm kategoriler</option></select>
+</section>
+<div class="count" id="count"></div>
+<section class="grid" id="list"></section>
+</main>
+<footer>Karınca Çiftliğim • Bilgi amaçlı sözlük</footer>
 
-<div class="container">
-
-    <div class="header">
-
-        <div class="logo">🐜</div>
-
-        <h1>Karınca Çiftliği</h1>
-
-        <div class="subtitle">
-            Karınca hobisi için kullanışlı araçlar
-        </div>
-
-    </div>
-
-
-    <div class="tools">
-
-        <div class="tool" onclick="openTool('calculator')">
-
-            <div class="tool-icon">🏠</div>
-
-            <div class="tool-title">
-                Formicarium Hesaplayıcı
-            </div>
-
-            <div class="tool-description">
-                Kolonin için uygun yuva koşullarını hesapla.
-            </div>
-
-        </div>
-
-
-        <div class="tool" onclick="openTool('diary')">
-
-            <div class="tool-icon">📔</div>
-
-            <div class="tool-title">
-                Koloni Günlüğü
-            </div>
-
-            <div class="tool-description">
-                Kolonilerinin gelişimini takip et.
-            </div>
-
-        </div>
-
-
-        <div class="tool" onclick="openTool('dictionary')">
-
-            <div class="tool-icon">📚</div>
-
-            <div class="tool-title">
-                Karınca Sözlüğü
-            </div>
-
-            <div class="tool-description">
-                Karınca hobisindeki terimleri keşfet.
-            </div>
-
-        </div>
-
-
-        <div class="tool" onclick="openTool('turkey')">
-
-            <div class="tool-icon">🇹🇷</div>
-
-            <div class="tool-title">
-                Türkiye Türleri
-            </div>
-
-            <div class="tool-description">
-                Türkiye'deki karınca kayıtlarını incele.
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="footer">
-
-        Karınca Çiftliği Araçları
-
-    </div>
-
+<div class="modal" id="modal">
+<div class="sheet">
+<button class="close" id="close">×</button>
+<div class="detail-num" id="detailNum"></div>
+<div class="detail-title" id="detailTitle"></div>
+<div class="detail-text" id="detailText"></div>
+<div class="tag detail-tag" id="detailCat"></div>
+</div>
 </div>
 
-
 <script>
+const TERMS=[{"id": 1, "name": "Koloni", "definition": "Bir veya daha fazla üreyen birey ile bunlara bağlı işçiler, erkekler ve gelişim evrelerinden oluşan sosyal karınca topluluğu.", "category": "Koloni ve sosyal yapı"}, {"id": 2, "name": "Süperkoloni", "definition": "Birbirleriyle aynı sosyal topluluğun üyeleri gibi etkileşen ve çok geniş alana yayılabilen çok sayıda yuva veya koloni biriminden oluşan yapı.", "category": "Koloni ve sosyal yapı"}, {"id": 3, "name": "Polidomi (Polydomy)", "definition": "Aynı koloninin birden fazla fiziksel yuvayı aynı sosyal sistem içinde kullanması.", "category": "Koloni ve sosyal yapı"}, {"id": 4, "name": "Monodomi (Monodomy)", "definition": "Bir koloninin temel olarak tek bir yuva kullanması.", "category": "Koloni ve sosyal yapı"}, {"id": 5, "name": "Monogini (Monogyny)", "definition": "Bir kolonide tek yumurtlayan kraliçenin bulunması.", "category": "Koloni ve sosyal yapı"}, {"id": 6, "name": "Poligini (Polygyny)", "definition": "Bir kolonide birden fazla yumurtlayan kraliçenin bulunması.", "category": "Koloni ve sosyal yapı"}, {"id": 7, "name": "Oligogini (Oligogyny)", "definition": "Birden fazla kraliçenin aynı kolonide bulunmasına rağmen birbirlerinden mekânsal olarak ayrıldığı ve genellikle birbirine tolerans göstermediği poligini biçimi.", "category": "Koloni ve sosyal yapı"}, {"id": 8, "name": "Monandri (Monandry)", "definition": "Bir kraliçenin bir erkekle çiftleşmesi.", "category": "Üreme"}, {"id": 9, "name": "Poliandri (Polyandry)", "definition": "Bir kraliçenin birden fazla erkekle çiftleşmesi ve spermleri depolaması.", "category": "Üreme"}, {"id": 10, "name": "Pleometroz (Pleometrosis)", "definition": "İki veya daha fazla kraliçenin yeni koloni kuruluşunda birlikte bulunması ve kuruluşu paylaşması.", "category": "Üreme"}, {"id": 11, "name": "Haplometroz (Haplometrosis)", "definition": "Yeni bir koloninin tek bir kraliçe tarafından kurulması.", "category": "Üreme"}, {"id": 12, "name": "Kast (Caste)", "definition": "Koloni içinde morfoloji, fizyoloji veya görev açısından farklılaşmış birey grubu.", "category": "Koloni ve sosyal yapı"}, {"id": 13, "name": "İşçi kastı", "definition": "Genellikle üremeyen dişi bireylerden oluşan; yavru bakımı, yuva bakımı, savunma ve foraj gibi görevleri yapan kast.", "category": "Koloni ve sosyal yapı"}, {"id": 14, "name": "Üreme kastı", "definition": "Üremeye katılan bireylerden oluşan kast; çoğunlukla kraliçeler ve erkekler.", "category": "Üreme"}, {"id": 15, "name": "İş bölümü (Division of labor)", "definition": "Koloni görevlerinin farklı bireyler arasında paylaşılması.", "category": "Davranış"}, {"id": 16, "name": "Kraliçe (Queen)", "definition": "Koloninin yumurta bırakan dişi üreyicisi; çiftleşmişse spermatheca'daki spermi yumurtaları döllemek için kullanabilir.", "category": "Üreme"}, {"id": 17, "name": "Gyne", "definition": "Üreme potansiyeline sahip dişi için kullanılan terim; literatürde kanatlı veya kanatsız dişi üreyicileri belirtmek için kullanımı değişebilir.", "category": "Üreme"}, {"id": 18, "name": "Foundress / Kurucu dişi", "definition": "Yeni koloni kurma sürecindeki dişi karınca.", "category": "Üreme"}, {"id": 19, "name": "Ergatoid kraliçe", "definition": "Kanatsız, işçiye benzer morfolojiye sahip fakat işlevsel üreme organları bulunan kraliçe.", "category": "Üreme"}, {"id": 20, "name": "Gamergate", "definition": "Çiftleşmiş ve yumurta bırakan işçi kökenli dişi; kraliçe kastı bulunmayan bazı türlerde üreme işlevini üstlenir.", "category": "Üreme"}, {"id": 21, "name": "Erkek (Male)", "definition": "Karıncalardaki erkek üreme bireyi; çoğunlukla kanatlıdır ve temel işlevi çiftleşmedir.", "category": "Üreme"}, {"id": 22, "name": "Alate", "definition": "Kanatlı üreme bireyi; kanatlı kraliçe adayı veya erkek için kullanılabilir.", "category": "Üreme"}, {"id": 23, "name": "Kanatlı dişi", "definition": "Kanat taşıyan dişi üreme bireyi; çoğu türde çiftleşme uçuşuna katılacak genç kraliçedir.", "category": "Üreme"}, {"id": 24, "name": "Kanatlı erkek", "definition": "Kanat taşıyan erkek üreme bireyi; çoğunlukla çiftleşme uçuşlarına katılır.", "category": "Üreme"}, {"id": 25, "name": "Çiftleşme uçuşu (Nuptial flight)", "definition": "Kanatlı erkek ve genç dişilerin kolonilerinden ayrılarak çiftleştiği üreme uçuşu.", "category": "Üreme"}, {"id": 26, "name": "Çiftleşme", "definition": "Erkek ve dişinin eşleşerek spermin dişinin üreme sistemine aktarılması.", "category": "Üreme"}, {"id": 27, "name": "Spermatheca", "definition": "Dişinin aldığı spermleri uzun süre canlı tutarak depoladığı özel yapı.", "category": "Üreme"}, {"id": 28, "name": "Sperm depolama", "definition": "Çiftleşmeyle alınan spermin spermatheca gibi bir yapıda uzun süre saklanması.", "category": "Üreme"}, {"id": 29, "name": "Kraliçenin yumurtlaması", "definition": "Kraliçenin yumurtalıklarında oluşan yumurtaları bırakması.", "category": "Üreme"}, {"id": 30, "name": "Koloni kuruluşu", "definition": "Yeni bir karınca kolonisinin kurulması ve ilk yavruların yetiştirilmesi süreci.", "category": "Üreme"}, {"id": 31, "name": "Bağımsız koloni kuruluşu", "definition": "Kurucu dişinin yeni koloniyi başka bir koloninin işçilerine ihtiyaç duymadan başlatması.", "category": "Üreme"}, {"id": 32, "name": "Bağımlı koloni kuruluşu", "definition": "Yeni koloninin mevcut bir koloninin işçileri veya kaynaklarından yararlanılarak kurulması.", "category": "Üreme"}, {"id": 33, "name": "Otofaji (Autophagy)", "definition": "Hücrenin kendi içindeki eski veya hasarlı bileşenleri parçalayarak geri dönüştürdüğü hücresel süreç. Yavru yeme ile eş anlamlı değildir.", "category": "Biyoloji"}, {"id": 34, "name": "Kraliçe kaybı", "definition": "Koloninin mevcut yumurtlayan kraliçesini kaybetmesi veya onun üreme işlevini sürdürememesi.", "category": "Koloni ve sosyal yapı"}, {"id": 35, "name": "Kraliçe değiştirme", "definition": "Kolonideki mevcut üreyicinin yerine başka bir üreyicinin geçmesi.", "category": "Koloni ve sosyal yapı"}, {"id": 36, "name": "Yumurta (Egg)", "definition": "Karıncanın gelişiminin ilk evresi.", "category": "Gelişim"}, {"id": 37, "name": "Larva (Larva)", "definition": "Yumurtadan çıkan, beslenerek büyüyen ve erişkin vücut yapısı henüz gelişmemiş evre.", "category": "Gelişim"}, {"id": 38, "name": "Pupa", "definition": "Larvadan erişkine dönüşüm sırasında vücut yapısının yeniden düzenlendiği gelişim evresi.", "category": "Gelişim"}, {"id": 39, "name": "Prepupa", "definition": "Larva evresinin sonunda, pupalaşma öncesindeki geçiş evresi.", "category": "Gelişim"}, {"id": 40, "name": "Yavru gelişimi (Brood development)", "definition": "Yumurta, larva ve pupa evrelerinin tamamını kapsayan gelişim süreci.", "category": "Gelişim"}, {"id": 41, "name": "Eklosyon (Eclosion)", "definition": "Bir bireyin pupal evreden çıkarak erişkin hale gelmesi.", "category": "Gelişim"}, {"id": 42, "name": "Metamorfoz", "definition": "Gelişim sırasında vücut biçiminin belirgin şekilde değişmesi; karıncalar tam başkalaşım geçirir.", "category": "Gelişim"}, {"id": 43, "name": "İşçi çıkışı", "definition": "Gelişimini tamamlayan yeni işçinin pupa veya kokonundan çıkarak erişkin hale gelmesi.", "category": "Gelişim"}, {"id": 44, "name": "Nanitik işçi (Nanitic worker)", "definition": "Yeni kurulmuş kolonide ilk çıkan, çoğu zaman sonraki işçilere göre daha küçük olan işçiler.", "category": "Kast ve işçiler"}, {"id": 45, "name": "İlk nesil işçiler", "definition": "Yeni kurulmuş kolonide gelişen ilk işçi grubu.", "category": "Kast ve işçiler"}, {"id": 46, "name": "Brood / Yavru topluluğu", "definition": "Kolonide bulunan yumurta, larva ve pupaların tümü.", "category": "Gelişim"}, {"id": 47, "name": "Larval beslenme", "definition": "Larvaların işçiler tarafından sağlanan besinlerle beslenmesi.", "category": "Beslenme"}, {"id": 48, "name": "Trofallaksi (Trophallaxis)", "definition": "Koloni bireyleri arasında ağızdan ağıza veya ağız ile başka bir vücut bölgesi arasında sıvı ya da işlenmiş besin aktarımı.", "category": "Beslenme"}, {"id": 49, "name": "Minör işçi (Minor)", "definition": "Polimorfik türlerdeki küçük işçi morfu.", "category": "Kast ve işçiler"}, {"id": 50, "name": "Media işçi (Media)", "definition": "Polimorfik türlerde minor ile major arasında yer alan orta büyüklükteki işçi morfu.", "category": "Kast ve işçiler"}, {"id": 51, "name": "Majör işçi (Major)", "definition": "Polimorfik türlerde genellikle en büyük işçi morflarından biri; çoğu zaman büyük baş ve güçlü mandibulalara sahiptir.", "category": "Kast ve işçiler"}, {"id": 52, "name": "Asker (Soldier)", "definition": "Savunma görevinde uzmanlaşmış işçi morfu için kullanılan işlevsel terim; her major işçi asker değildir.", "category": "Kast ve işçiler"}, {"id": 53, "name": "İşçi polimorfizmi", "definition": "Aynı türün işçileri arasında belirgin boyut veya vücut biçimi farklılıklarının bulunması.", "category": "Kast ve işçiler"}, {"id": 54, "name": "Polimorfizm", "definition": "Aynı tür içinde birden fazla belirgin fenotip veya morfun bulunması.", "category": "Genetik ve varyasyon"}, {"id": 55, "name": "Monomorfizm", "definition": "Aynı kasttaki bireylerin boyut ve vücut biçimi bakımından büyük ölçüde benzer olması.", "category": "Genetik ve varyasyon"}, {"id": 56, "name": "Dimorfizm", "definition": "İki belirgin morfolojik formun bulunması.", "category": "Genetik ve varyasyon"}, {"id": 57, "name": "Kraliçe polimorfizmi", "definition": "Aynı türde birden fazla belirgin kraliçe morfunun bulunması.", "category": "Üreme"}, {"id": 58, "name": "İşçi morfu", "definition": "İşçi kastı içinde morfolojik olarak farklılaşmış belirli işçi tipi.", "category": "Kast ve işçiler"}, {"id": 59, "name": "Ergatoid işçi", "definition": "İşçiye benzeyen ancak bazı türlerde üreme özellikleri taşıyan veya üreme yeteneği kazanabilen birey; terimin kullanımı taksona göre değişir.", "category": "Kast ve işçiler"}, {"id": 60, "name": "Intercaste / Intermorf", "definition": "Morfolojik olarak işçi ile kraliçe arasında ara özellikler gösteren birey; çoğu kullanımda tam işlevsel bir kraliçe değildir.", "category": "Kast ve işçiler"}, {"id": 61, "name": "İşçi yaşı", "definition": "Bir işçinin erişkin hale gelmesinden itibaren geçen süre.", "category": "Davranış"}, {"id": 62, "name": "Yaşa bağlı görev değişimi", "definition": "İşçilerin yaş, fizyolojik durum veya koloninin ihtiyacına bağlı olarak farklı görevler üstlenmesi.", "category": "Davranış"}, {"id": 63, "name": "Polyethism", "definition": "Koloni görevlerinin işçilerin yaşı, fizyolojisi veya morfolojisiyle ilişkili biçimde farklılaşması.", "category": "Davranış"}, {"id": 64, "name": "Baş (Head)", "definition": "Gözler, antenler ve mandibulalar gibi önemli yapıların bulunduğu vücut bölümü.", "category": "Morfoloji"}, {"id": 65, "name": "Toraks / Mesosoma", "definition": "Karıncada pro-, mezo- ve metatoraks ile propodeumun oluşturduğu orta vücut birimi; karıncalarda “mesosoma” daha doğru terimdir.", "category": "Morfoloji"}, {"id": 66, "name": "Gaster", "definition": "Petiole ve varsa postpetiole arkasındaki, karıncanın dışarıdan görülen geniş arka vücut bölümü.", "category": "Morfoloji"}, {"id": 67, "name": "Petiol", "definition": "Mesosoma ile gaster arasında bulunan, karıncanın ikinci abdominal segmentinden (A2) türeyen daralmış bağlantı bölümü.", "category": "Morfoloji"}, {"id": 68, "name": "Postpetiol", "definition": "Petioleden sonra gelen, belirgin biçimde ayrılmışsa üçüncü abdominal segmenti (A3) oluşturan daralmış bölüm.", "category": "Morfoloji"}, {"id": 69, "name": "Petiol düğümü (Petiole node)", "definition": "Petiol üzerinde sırt tarafında görülen düğüm veya çıkıntı biçimli bölüm.", "category": "Morfoloji"}, {"id": 70, "name": "Anten", "definition": "Koku, temas ve diğer çevresel bilgilerin algılanmasında kullanılan çift duyu organı.", "category": "Morfoloji"}, {"id": 71, "name": "Anten skapusu (Scape)", "definition": "Antenin başa bağlanan ilk ve genellikle en uzun segmenti.", "category": "Morfoloji"}, {"id": 72, "name": "Anten funikulusu (Funiculus)", "definition": "Skapustan sonra gelen, birden fazla segmentten oluşan anten bölümü.", "category": "Morfoloji"}, {"id": 73, "name": "Anten segmenti", "definition": "Antenin eklemli bölümlerinden her biri.", "category": "Morfoloji"}, {"id": 74, "name": "Flagellum", "definition": "Antenin skapustan sonraki distal kısmı; karıncalarda funikulusla büyük ölçüde örtüşen kullanım gösterir.", "category": "Morfoloji"}, {"id": 75, "name": "Mandibula", "definition": "Beslenme, savunma, taşıma ve kazma gibi işlerde kullanılan çift çene yapısı.", "category": "Morfoloji"}, {"id": 76, "name": "Clypeus", "definition": "Başın ön tarafında, mandibulaların hemen arkasında bulunan plak benzeri yapı.", "category": "Morfoloji"}, {"id": 77, "name": "Frontal lob", "definition": "Antenlerin tabanlarını kısmen örten, başın ön kısmındaki lob benzeri yapı.", "category": "Morfoloji"}, {"id": 78, "name": "Ocellus", "definition": "Işığı algılamaya yardımcı basit göz; özellikle kanatlı üreme bireylerinde belirgindir.", "category": "Morfoloji"}, {"id": 79, "name": "Bileşik göz", "definition": "Çok sayıda ommatidyumdan oluşan görsel organ.", "category": "Morfoloji"}, {"id": 80, "name": "Göz", "definition": "Karıncanın görsel bilgiyi algılamasını sağlayan organ; temel görsel organ bileşik gözdür.", "category": "Morfoloji"}, {"id": 81, "name": "Pronotum", "definition": "Mesosomanın ön bölümünü oluşturan, protoraksın dorsal plakası.", "category": "Morfoloji"}, {"id": 82, "name": "Mesonotum", "definition": "Mesosomanın orta torasik bölümü; kanatlı bireylerde uçuş yapılarıyla ilişkili.", "category": "Morfoloji"}, {"id": 83, "name": "Propodeum", "definition": "Mesosomanın arka kısmında bulunan ve morfolojik olarak ilk abdominal segmentin (A1) dorsal bölümünden oluşan yapı.", "category": "Morfoloji"}, {"id": 84, "name": "Propodeal diken", "definition": "Propodeum üzerinde bulunan diken biçimli çıkıntı; şekli ve uzunluğu teşhiste kullanılabilir.", "category": "Morfoloji"}, {"id": 85, "name": "Spirakül", "definition": "Solunum sistemine hava giriş çıkışını sağlayan açıklık.", "category": "Morfoloji"}, {"id": 86, "name": "Metapleural bez", "definition": "Antimikrobiyal salgılar üreten ve karınca hijyeninde önemli rol oynayan bez.", "category": "Morfoloji"}, {"id": 87, "name": "Pretarsus", "definition": "Bacağın tarsusun sonunda bulunan uç bölümü; tırnaklar ve tutunma yapıları burada yer alır.", "category": "Morfoloji"}, {"id": 88, "name": "Tarsus", "definition": "Tibianın distalinde bulunan ve genellikle birden fazla segmentten oluşan bacak bölümü.", "category": "Morfoloji"}, {"id": 89, "name": "Tibia", "definition": "Femurdan sonra gelen uzun bacak segmenti.", "category": "Morfoloji"}, {"id": 90, "name": "Femur", "definition": "Trochanter ile tibia arasında bulunan büyük bacak segmenti.", "category": "Morfoloji"}, {"id": 91, "name": "Trochanter", "definition": "Coxa ile femur arasında bulunan bacak segmenti.", "category": "Morfoloji"}, {"id": 92, "name": "Coxa", "definition": "Bacağın vücuda bağlanan ilk ana segmenti.", "category": "Morfoloji"}, {"id": 93, "name": "Tırnak (Pretarsal claw)", "definition": "Bacağın ucunda yüzeylere tutunmayı sağlayan kanca benzeri yapı.", "category": "Morfoloji"}, {"id": 94, "name": "Scutellum", "definition": "Özellikle kanatlı bireylerde mesosomanın arka kısmında belirgin olan torasik sklerit.", "category": "Morfoloji"}, {"id": 95, "name": "Gaster segmentleri", "definition": "Gasteri oluşturan abdominal segmentler; numaralandırma morfolojik çalışmalarda kullanılır.", "category": "Morfoloji"}, {"id": 96, "name": "Pygidium", "definition": "İşçi ve kraliçelerde son görünür abdominal tergit olan A7'nin dorsal bölgesi.", "category": "Morfoloji"}, {"id": 97, "name": "İğne (Sting)", "definition": "Bazı karıncalarda savunma veya avlanmada kullanılan, abdomen ucundaki zehir enjeksiyon yapısı.", "category": "Morfoloji"}, {"id": 98, "name": "Zehir bezi", "definition": "İğne sistemiyle veya başka yollarla kullanılan kimyasal salgıları üreten bez.", "category": "Morfoloji"}, {"id": 99, "name": "Feromon bezi", "definition": "Kimyasal iletişimde kullanılan feromonları üreten bezler için genel ifade.", "category": "İletişim"}, {"id": 100, "name": "Tür (Species)", "definition": "Biyolojik sınıflandırmanın temel birimlerinden biri; tür sınırları morfolojik, genetik, davranışsal ve diğer kanıtlarla değerlendirilebilir.", "category": "Taksonomi"}, {"id": 101, "name": "Cins (Genus)", "definition": "Yakın akraba türleri bir araya getiren taksonomik basamak; ikili bilimsel adlandırmada ilk isimdir.", "category": "Taksonomi"}, {"id": 102, "name": "Alt familya (Subfamily)", "definition": "Familya içinde yer alan daha düşük taksonomik basamak.", "category": "Taksonomi"}, {"id": 103, "name": "Familya (Family)", "definition": "Yakın akraba cinsleri bir araya getiren taksonomik basamak; tüm karıncalar Formicidae familyasındadır.", "category": "Taksonomi"}, {"id": 104, "name": "Takson (Taxon)", "definition": "Sınıflandırmada belirli bir canlı grubunu ifade eden genel terim; türden üst basamaklara kadar kullanılabilir.", "category": "Taksonomi"}, {"id": 105, "name": "Morfolojik tür", "definition": "Morfolojik karakterler temelinde ayırt edilen tür kavramı veya tür sınırı.", "category": "Taksonomi"}, {"id": 106, "name": "Kriptik tür (Cryptic species)", "definition": "Dış görünüşleri çok benzer veya ayırt edilemeyen, ancak genetik ya da başka kanıtlarla ayrı türler olduğu gösterilen türler.", "category": "Taksonomi"}, {"id": 107, "name": "Tür kompleksi (Species complex)", "definition": "Birbirine çok yakın ve ayrımı güç birden fazla türün oluşturduğu grup.", "category": "Taksonomi"}, {"id": 108, "name": "Tür grubu (Species group)", "definition": "Yakın akraba türleri ifade etmek için kullanılan, özellikle revizyon ve teşhis çalışmalarında kullanılan grup adı.", "category": "Taksonomi"}, {"id": 109, "name": "Alt tür (Subspecies)", "definition": "Bir türün altında yer alan, coğrafi veya başka kalıcı farklılıklarla tanımlanan taksonomik birim.", "category": "Taksonomi"}, {"id": 110, "name": "Sinonim (Synonym)", "definition": "Aynı takson için kullanılmış ve taksonomik olarak aynı kabul edilen farklı bilimsel adlardan biri.", "category": "Taksonomi"}, {"id": 111, "name": "Holotip (Holotype)", "definition": "Bir tür ilk kez tanımlanırken isim taşıyıcı olarak belirlenen tek tip örnek.", "category": "Taksonomi"}, {"id": 112, "name": "Paratip (Paratype)", "definition": "Holotip dışında, türün ilk tanımını desteklemek üzere belirlenmiş tip serisindeki örnek.", "category": "Taksonomi"}, {"id": 113, "name": "Tip lokalitesi (Type locality)", "definition": "Bir türün holotipinin toplandığı coğrafi yer.", "category": "Taksonomi"}, {"id": 114, "name": "Taksonomik revizyon", "definition": "Bir takson grubunun türleri, isimleri ve sınıflandırmasının yeni kanıtlar ışığında yeniden değerlendirilmesi.", "category": "Taksonomi"}, {"id": 115, "name": "Teşhis anahtarı (Identification key)", "definition": "Bir canlıyı özelliklerine göre adım adım seçeneklerle tanımlamaya yarayan araç.", "category": "Taksonomi"}, {"id": 116, "name": "Morfolojik karakter", "definition": "Tanımlama veya karşılaştırmada kullanılan fiziksel özellik; örneğin anten segment sayısı veya propodeal diken.", "category": "Taksonomi"}, {"id": 117, "name": "Morf (Morph)", "definition": "Aynı tür veya kast içinde belirli özelliklerle ayrılan biçim veya fenotip.", "category": "Genetik ve varyasyon"}, {"id": 118, "name": "Varyasyon", "definition": "Aynı türün bireyleri arasında görülen boyut, renk, şekil veya diğer özellik farklılıkları.", "category": "Genetik ve varyasyon"}, {"id": 119, "name": "Filogeni (Phylogeny)", "definition": "Bir canlı grubunun evrimsel geçmişi ve akrabalık ilişkileri.", "category": "Taksonomi"}, {"id": 120, "name": "Filogenetik", "definition": "Evrimsel akrabalık ve ortak ata ilişkileriyle ilgili olan.", "category": "Taksonomi"}, {"id": 121, "name": "Yuva (Nest)", "definition": "Karıncaların yaşadığı, yavrularını yetiştirdiği ve koloni faaliyetlerini gerçekleştirdiği yapı veya alan.", "category": "Yuva ve habitat"}, {"id": 122, "name": "Formicarium", "definition": "Karıncaların kontrollü ortamda bakılması ve gözlemlenmesi için hazırlanmış yapay yaşam alanı.", "category": "Yuva ve habitat"}, {"id": 123, "name": "Outworld / Arena", "definition": "Formicariumda karıncaların foraj ve beslenme gibi dış yuva faaliyetlerini yaptığı alan.", "category": "Yuva ve habitat"}, {"id": 124, "name": "Yuva odası", "definition": "Yuva içinde karıncaların belirli faaliyetleri gerçekleştirdiği oda veya bölüm.", "category": "Yuva ve habitat"}, {"id": 125, "name": "Tünel", "definition": "Yuvanın farklı bölümlerini birbirine bağlayan geçit.", "category": "Yuva ve habitat"}, {"id": 126, "name": "Yuva girişi", "definition": "Karıncaların yuva ile dış ortam arasında geçiş yaptığı açıklık.", "category": "Yuva ve habitat"}, {"id": 127, "name": "Yuva genişletmesi", "definition": "Koloni büyüdükçe yeni oda veya tüneller eklenmesi ya da kullanılabilir alanın artırılması.", "category": "Yuva ve habitat"}, {"id": 128, "name": "Nem gradyanı", "definition": "Bir ortamın farklı bölgeleri arasında nem seviyelerinin farklı olması.", "category": "Yuva ve habitat"}, {"id": 129, "name": "Isı gradyanı", "definition": "Bir ortamın farklı bölgeleri arasında sıcaklık farkı bulunması.", "category": "Yuva ve habitat"}, {"id": 130, "name": "Mikrohabitat", "definition": "Daha geniş habitat içinde kendine özgü çevresel koşullara sahip küçük yaşam alanı.", "category": "Yuva ve habitat"}, {"id": 131, "name": "Habitat", "definition": "Bir canlının doğal olarak yaşadığı ve yaşamını sürdürdüğü fiziksel ve biyolojik çevre.", "category": "Yuva ve habitat"}, {"id": 132, "name": "Mikroklima", "definition": "Küçük bir alandaki sıcaklık, nem, ışık ve hava hareketleri gibi yerel iklim koşullarının bütünü.", "category": "Yuva ve habitat"}, {"id": 133, "name": "Yuva nemi", "definition": "Yuva içindeki nem düzeyi.", "category": "Yuva ve habitat"}, {"id": 134, "name": "Yuva sıcaklığı", "definition": "Yuva içindeki sıcaklık koşulu.", "category": "Yuva ve habitat"}, {"id": 135, "name": "Hibernasyon", "definition": "Bazı canlıların soğuk dönemde metabolik faaliyetlerini azaltarak geçirdiği kış dinlenmesi; tüm karıncalar için geçerli değildir.", "category": "Yuva ve habitat"}, {"id": 136, "name": "Diyapoz (Diapause)", "definition": "Gelişimin veya fizyolojik faaliyetlerin programlı ve geçici biçimde duraklatılması ya da yavaşlatılması.", "category": "Yuva ve habitat"}, {"id": 137, "name": "Estivasyon (Estivation)", "definition": "Sıcak veya kurak dönemlerde metabolik faaliyetlerin azaltıldığı dinlenme durumu.", "category": "Yuva ve habitat"}, {"id": 138, "name": "Claustral kuruluş", "definition": "Kurucu kraliçenin ilk işçileri yetiştirirken kapalı bir yuvada dışarıdan besin almadan kendi rezervlerine dayanması.", "category": "Koloni kuruluşu"}, {"id": 139, "name": "Semi-claustral kuruluş", "definition": "Kurucu kraliçenin ilk yavruları yetiştirirken zaman zaman yuvadan çıkarak kendisi için besin araması.", "category": "Koloni kuruluşu"}, {"id": 140, "name": "Budding / Tomurcuklanma", "definition": "Mevcut koloniden işçiler ve genellikle bir veya daha fazla kraliçenin ayrılarak yeni bir yuvalanma birimi oluşturması.", "category": "Koloni kuruluşu"}, {"id": 141, "name": "Foraj (Foraging)", "definition": "Koloni için yiyecek, su veya başka kaynakları arama ve toplama faaliyeti.", "category": "Davranış"}, {"id": 142, "name": "Forager", "definition": "Koloni için dış ortamda kaynak arayan ve toplayan işçi.", "category": "Davranış"}, {"id": 143, "name": "Besin arama", "definition": "Koloni tarafından kullanılabilecek besin kaynaklarını bulma ve değerlendirme davranışı.", "category": "Davranış"}, {"id": 144, "name": "Trofallaksi", "definition": "Bkz. 48: Koloni bireyleri arasında besin veya sıvı aktarımı.", "category": "Beslenme"}, {"id": 145, "name": "Feromon", "definition": "Aynı türün diğer bireylerinde davranışsal veya fizyolojik tepki oluşturabilen kimyasal sinyal.", "category": "İletişim"}, {"id": 146, "name": "Feromon izi", "definition": "Karıncaların bir kaynağa veya noktaya ulaşırken bıraktığı ve diğer bireylerin takip edebildiği kimyasal iz.", "category": "İletişim"}, {"id": 147, "name": "Alarm feromonu", "definition": "Tehdit durumunda diğer bireyleri uyarmak ve savunma davranışını tetiklemek için kullanılan kimyasal sinyal.", "category": "İletişim"}, {"id": 148, "name": "Rekrutman (Recruitment)", "definition": "Bir işçinin kaynak veya tehdit hakkında diğer koloni bireylerini aynı bölgeye yönlendirmesi.", "category": "İletişim"}, {"id": 149, "name": "Toplayıcılık", "definition": "Koloni için kaynakların aranması, toplanması ve yuvaya taşınması.", "category": "Davranış"}, {"id": 150, "name": "Avcılık", "definition": "Canlı hayvanların yakalanarak besin olarak kullanılması.", "category": "Beslenme"}, {"id": 151, "name": "Nekrofaji (Necrophagy)", "definition": "Ölü hayvan veya canlı dokularıyla beslenme.", "category": "Beslenme"}, {"id": 152, "name": "Granivori (Granivory)", "definition": "Tohum ve diğer bitkisel tanelerle beslenme.", "category": "Beslenme"}, {"id": 153, "name": "Herbivori (Herbivory)", "definition": "Bitkisel dokular veya bitkisel kaynaklı maddelerle beslenme.", "category": "Beslenme"}, {"id": 154, "name": "Omnivori (Omnivory)", "definition": "Hem hayvansal hem bitkisel kaynaklı besinlerden yararlanabilme.", "category": "Beslenme"}, {"id": 155, "name": "Mutualizm (Mutualism)", "definition": "Farklı türlerin etkileşiminden her iki tarafın da net fayda sağladığı ilişki.", "category": "Ekoloji"}, {"id": 156, "name": "Sembiyoz (Symbiosis)", "definition": "Farklı türlerin yakın ve uzun süreli biyolojik birlikteliği; ilişkinin niteliği ayrıca tanımlanmalıdır.", "category": "Ekoloji"}, {"id": 157, "name": "Tohum depolama", "definition": "Toplanan tohumların ileride kullanılmak üzere yuvada veya başka alanlarda biriktirilmesi.", "category": "Davranış"}, {"id": 158, "name": "Sosyal sindirim", "definition": "Besinin bir koloni bireyi tarafından işlenerek başka bireylerin tüketimine sunulması; trofallaksi bunun bir parçası olabilir.", "category": "Beslenme"}, {"id": 159, "name": "Brood care / Yavru bakımı", "definition": "Yumurta, larva ve pupaların temizlenmesi, taşınması, beslenmesi ve uygun koşullarda tutulması.", "category": "Davranış"}, {"id": 160, "name": "Grooming / Tımarlama", "definition": "Karıncaların kendilerini veya koloni arkadaşlarını temizlemesi.", "category": "Davranış"}, {"id": 161, "name": "Mirmekofili (Myrmecophily)", "definition": "Karıncalarla ilişkili yaşam biçimi için kullanılan geniş bir terim; anlamı literatürde bağlama göre değişebilir.", "category": "Ekoloji"}, {"id": 162, "name": "Mirmekokori (Myrmecochory)", "definition": "Tohumların karıncalar tarafından taşınarak yayılması; özellikle elaiosom taşıyan tohumların dağıtılmasını ifade eder.", "category": "Ekoloji"}, {"id": 163, "name": "Mirmekofaji (Myrmecophagy)", "definition": "Karıncalarla beslenme.", "category": "Ekoloji"}, {"id": 164, "name": "Mirmekofil canlı", "definition": "Yaşamının bir bölümünde karınca kolonilerinden veya karıncalarla olan ilişkiden yararlanan organizma.", "category": "Ekoloji"}, {"id": 165, "name": "Mirmekofit / Mirmekofilik bitki", "definition": "Karıncalarla yakın ilişki kuran, örneğin barınak veya besin sağlayan bitki.", "category": "Ekoloji"}, {"id": 166, "name": "Trofobiyoz (Trophobiosis)", "definition": "Karıncalar ile başka organizmalar arasında besin alışverişine dayalı ilişki; yaprak bitlerinin balözü sağlaması klasik örnektir.", "category": "Ekoloji"}, {"id": 167, "name": "Mutualistik ilişki", "definition": "Her iki tarafın da fayda sağladığı türler arası ilişki; 155 ile aynı temel kavramdır.", "category": "Ekoloji"}, {"id": 168, "name": "Kommensalizm (Commensalism)", "definition": "Bir tarafın fayda sağladığı, diğer tarafın ise belirgin biçimde etkilenmediği türler arası ilişki.", "category": "Ekoloji"}, {"id": 169, "name": "Parazitizm (Parasitism)", "definition": "Bir organizmanın konaktan yararlanırken konağa zarar verdiği ilişki.", "category": "Ekoloji"}, {"id": 170, "name": "Sosyal parazitizm", "definition": "Bir karınca türünün başka bir karınca türünün sosyal sisteminden yararlandığı ilişki.", "category": "Sosyal parazitizm"}, {"id": 171, "name": "Zorunlu sosyal parazit", "definition": "Yaşam döngüsünün önemli bir bölümünde başka bir karınca türünün kolonisine bağımlı olan sosyal parazit.", "category": "Sosyal parazitizm"}, {"id": 172, "name": "Geçici sosyal parazit", "definition": "Yeni koloni kuruluşunda konak türün kolonisini kullanan ve zamanla konak işçilerini kendi işçileriyle değiştirebilen parazit.", "category": "Sosyal parazitizm"}, {"id": 173, "name": "Köle baskını (Slave raiding)", "definition": "Bir koloninin başka bir koloniden yavruları ele geçirerek kendi kolonisine taşıması.", "category": "Sosyal parazitizm"}, {"id": 174, "name": "Dulosis", "definition": "Köle baskınlarıyla başka türlerin yavrularını ele geçirip bunlardan işçiler elde eden sosyal parazit yaşam biçimi.", "category": "Sosyal parazitizm"}, {"id": 175, "name": "Sosyal parazit kraliçe", "definition": "Koloni kuruluşunda veya yaşamında başka bir karınca türünün kolonisinden yararlanan parazit kraliçe.", "category": "Sosyal parazitizm"}, {"id": 176, "name": "Konak koloni", "definition": "Sosyal parazit türün yararlandığı veya koloni kuruluşunda kullandığı karınca kolonisi.", "category": "Sosyal parazitizm"}, {"id": 177, "name": "Evlat edinme (Adoption)", "definition": "Bir koloninin kendisine ait olmayan bir bireyi kabul ederek sosyal sistemine dahil etmesi.", "category": "Koloni ve sosyal yapı"}, {"id": 178, "name": "Bölgesellik (Territoriality)", "definition": "Bir koloni veya bireylerin belirli bir alanı başka birey ya da kolonilere karşı savunması.", "category": "Davranış"}, {"id": 179, "name": "Agresyon", "definition": "Bir bireyin başka bir bireye karşı saldırı, ısırma, iğneleme veya benzeri saldırgan davranış göstermesi.", "category": "Davranış"}, {"id": 180, "name": "Koloni tanıma", "definition": "Karıncaların bir bireyin kendi koloni üyeleri arasında olup olmadığını kimyasal ve davranışsal ipuçlarıyla ayırt etmesi.", "category": "İletişim"}, {"id": 181, "name": "Nestmate recognition", "definition": "Aynı koloninin üyelerini yabancılardan ayırt etme süreci.", "category": "İletişim"}, {"id": 182, "name": "Nestmate", "definition": "Aynı koloninin sosyal üyesi olan birey.", "category": "İletişim"}, {"id": 183, "name": "Non-nestmate", "definition": "Aynı koloninin üyesi olmayan birey.", "category": "İletişim"}, {"id": 184, "name": "Koloni kokusu", "definition": "Koloni üyelerinin birbirini tanımasına katkı sağlayan ortak kimyasal profil için kullanılan hobi terimi.", "category": "İletişim"}, {"id": 185, "name": "Kimyasal profil (Odor profile)", "definition": "Bir birey veya kolonide bulunan kimyasal bileşiklerin oluşturduğu karakteristik profil.", "category": "İletişim"}, {"id": 186, "name": "Baskınlık (Dominance)", "definition": "Bireyler arasındaki sosyal etkileşimlerde bazı bireylerin diğerleri üzerinde davranışsal üstünlük kurması.", "category": "Davranış"}, {"id": 187, "name": "İntraspesifik rekabet", "definition": "Aynı türe ait birey veya koloniler arasındaki kaynak, alan veya üreme fırsatları için rekabet.", "category": "Ekoloji"}, {"id": 188, "name": "İnterspefisik rekabet", "definition": "Farklı türlere ait birey veya koloniler arasındaki kaynak veya alan rekabeti.", "category": "Ekoloji"}, {"id": 189, "name": "Koloni birleşmesi", "definition": "Ayrı sosyal grupların bir araya gelerek tek bir sosyal sistem oluşturması veya birlikte yaşamaya başlaması.", "category": "Koloni ve sosyal yapı"}, {"id": 190, "name": "Koloni bölünmesi", "definition": "Bir koloninin iki veya daha fazla ayrı sosyal birime ayrılması; bazı türlerde doğal koloni çoğalmasının bir yolu.", "category": "Koloni ve sosyal yapı"}];
+const list=document.getElementById("list");
+const search=document.getElementById("search");
+const category=document.getElementById("category");
+const count=document.getElementById("count");
+const modal=document.getElementById("modal");
 
-    function openTool(tool) {
+[...new Set(TERMS.map(t=>t.category))].sort((a,b)=>a.localeCompare(b,"tr")).forEach(c=>{
+ const o=document.createElement("option"); o.value=c; o.textContent=c; category.appendChild(o);
+});
 
-        alert("Bu bölüm yakında eklenecek.");
-
-    }
-
+function render(){
+ const q=search.value.trim().toLocaleLowerCase("tr");
+ const cat=category.value;
+ const filtered=TERMS.filter(t=>
+   (!q || (t.name+" "+t.definition).toLocaleLowerCase("tr").includes(q)) &&
+   (!cat || t.category===cat)
+ );
+ count.textContent=filtered.length+" terim gösteriliyor";
+ list.innerHTML="";
+ if(!filtered.length){list.innerHTML='<div class="empty">Aradığın terim bulunamadı.</div>';return}
+ filtered.forEach(t=>{
+   const card=document.createElement("article");
+   card.className="card";
+   card.innerHTML=`<div class="num">#${t.id}</div><div class="name">${escapeHtml(t.name)}</div><div class="preview">${escapeHtml(t.definition)}</div><span class="tag">${escapeHtml(t.category)}</span>`;
+   card.onclick=()=>openDetail(t);
+   list.appendChild(card);
+ });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function openDetail(t){
+ document.getElementById("detailNum").textContent="#"+t.id;
+ document.getElementById("detailTitle").textContent=t.name;
+ document.getElementById("detailText").textContent=t.definition;
+ document.getElementById("detailCat").textContent=t.category;
+ modal.classList.add("open");
+}
+function closeModal(){modal.classList.remove("open")}
+search.addEventListener("input",render);
+category.addEventListener("change",render);
+document.getElementById("close").onclick=closeModal;
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+render();
 </script>
-
 </body>
 </html>
